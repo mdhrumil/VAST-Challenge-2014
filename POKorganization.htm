@@ -1,0 +1,2149 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>POK changes over time</title>
+  <style>
+    body {
+      font: 12pt arial bold;
+    }
+    #mygraph {
+      width: 600px;
+      height: 550px;
+      border: 1px solid lightgray;
+      background: #F3F3F3;
+	  position:absolute;
+	  top: 30px;
+	  left:930px;
+    }
+  </style>
+  
+  <div id="container" style="height: 600px; width: 900px"></div>
+
+<body onload="draw()">
+<br><div id="mygraph"></div>
+	</body>
+  
+  		<script type="text/javascript" src="vis.js"></script>
+  		 <link src="vis.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="Highcharts/Highcharts-4.0.1/js/jquery.min.js"></script>
+		<script type="text/javascript">
+$(function() {
+
+	//$.getJSON('data.js', function(data) {
+		// Create the chart
+		$('#container').highcharts({
+			chart: {
+                zoomType: 'x',
+				renderTo: 'container',
+            },
+			
+			rangeSelector : {
+			    enabled: true,
+			},
+
+
+			title : {
+				text : "POK"
+			},
+			
+			subtitle : {
+			    text : 'Structure and Organization'
+			},
+			
+			xAxis: {
+                type: 'datetime',
+				ordinal: false,
+                minRange: 14 * 24 * 3600, // fourteen days
+				plotBands: [
+				{
+                    from: Date.UTC(1997,0,1),
+                    to: Date.UTC(2002,0,1),
+                    color: 'rgba(50, 205, 50, .3)',
+					label: {
+                        text: 'Grassroots Movement',
+						align: 'left',
+						x: 10
+					}  
+				},{
+                    from: Date.UTC(2002,0,1),
+                    to: Date.UTC(2005,0,1),
+                    color: 'rgba(255, 215, 0, .3)',
+					label: {
+                        text: 'Peaceful<br>Engagement<br>and Recruitment',
+						align: 'left',
+						x: 10
+					}
+				},{
+				    from: Date.UTC(2005,0,1),
+                    to: Date.UTC(2009,0,1),
+                    color: 'rgba(238, 44, 44, .3)',
+					label: {
+                        text: 'Activism and Protest',
+						align: 'left',
+						x: 10
+					}
+				},{
+				    from: Date.UTC(2009,0,1),
+                    to: Date.UTC(2015,0,1),
+                    color: 'rgba(139, 137, 137, .3)',
+					label: {
+                        text: 'Possible Futures',
+						align: 'left',
+						x: 10
+					}
+				}
+				
+				]
+            },
+			
+
+			
+            yAxis:  [{
+			    min:0,
+		        labels: {
+		    		align: 'right',
+		    		x: -3,
+					enabled: false
+		    	},
+		        title: {
+		            text: 'People Events'
+		        },
+		        height: '35%',
+		        lineWidth: 2
+		    }, {
+		    	labels: {
+		    		align: 'right',
+		    		x: -3
+		    	},
+		        title: {
+		            text: 'Events valuence'
+		        },
+		        top: '40%',
+		        height: '35%',
+		        offset: 0,
+		        lineWidth: 2,
+				min:-20,
+				max:10
+		    },{
+		    	labels: {
+		    		align: 'right',
+		    		x: -3
+		    	},
+		        title: {
+		            text: 'Topics Trend'
+		        },
+		        top: '80%',
+		        height: '20%',
+		        offset: 0,
+		        lineWidth: 2,
+				max:10
+		    }],
+			
+			tooltip: {
+                //headerFormat: '<b>'+ Highcharts.dateFormat('%A, %b %e, %Y') +'</b><br>',
+				//'<b>{point.x}</b><br>',
+				formatter: function() {
+				    if(this.point.name != null && this.x != null)
+					    var s =  Highcharts.dateFormat('%B %Y', this.x) +'<br>'+'<span style="color:' + this.series.color + '">\u25CF</span>' +'<b>'+ this.series.name+ '</b><br>'+this.point.name
+				    else if(this.point.name == null)
+					    var s = Highcharts.dateFormat('%B %Y', this.x)+'<br>'+'<span style="color:' + this.series.color + '">\u25CF</span>' +'<b>'+ this.series.name+ '</b><br>'+'Frequency: '+this.point.y
+					else
+					    var s = '<span style="color:' + this.point.color + '">\u25CF</span>' +'<b>'+ this.point.name+ '</b>: '+ this.point.y +'%'
+				return s;
+				},
+				
+				crosshairs: true,
+            },
+			
+			navigator: {
+			    enabled: true,
+				baseSeries:0
+			},
+			
+			credits: {
+			    enabled: false
+			},
+			
+			exporting: {
+			    sourceWidth: 1366
+			},
+			
+			legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                //borderWidth: 0,
+				y:-30
+            },
+			
+			plotOptions: {
+			    series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        mouseOver: function() {
+					if(this.id==1){							
+						try {
+						nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: 'img/pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);
+						//nodes.add(edgesData);
+							edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							nodes.update([
+							{id: 23,  label: 'Cesare Nespola\nMinister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-1.png', shape: 'image'}
+							]);
+							
+						}catch (err){}						
+                    }
+					
+					if(this.id==2){							
+						try {
+						nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							nodes.update([
+							{id: 23,  label: 'Cesare Nespola\nMinister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'}
+							]);					
+						}catch (err){}						
+                    }
+					
+					if(this.id==3){							
+						try {	
+						nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							nodes.update([
+							{id: 23,  label: 'Cesare Nespola\nMinister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'}
+							]);
+							
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'}
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							//{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							//{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							//{id:26,from: 12,   to: 27,   label: 'uncle',length: 200}
+							]);
+							
+						}catch (err){}						
+                    }	
+					
+					if(this.id==4){							
+						try {	
+						nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'}
+							]);
+							
+							nodes.update([
+							{id: 23,  label: 'Cesare Nespola\nMinister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'}
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							//{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							//{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							//{id:26,from: 12,   to: 27,   label: 'uncle',length: 200}
+							]);
+							
+						}catch (err){}						
+                    }	
+					
+					if(this.id==5){							
+						try {		
+nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'}
+							]);
+							
+							nodes.update([
+							
+							{id: 23,  label: 'Cesare Nespola\nMinister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							//{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							//{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							//{id:26,from: 12,   to: 27,   label: 'uncle',length: 200}
+							{id:11, from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+							]);
+							
+						}catch (err){}						
+                    }	
+					
+					if(this.id==12){							
+						try {		
+nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 22,  label: 'Vincent Kapelou\ncurrent Minister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							]);
+							
+							nodes.update([
+							
+							{id: 23,  label: 'Cesare Nespola\nex Minister of Health',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							//{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							//{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							//{id:26,from: 12,   to: 27,   label: 'uncle',length: 200}
+							{id:11, from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+							 {id:27, from: 22,   to: 23,   label: 'successor',length: 200},
+							 {id:28, from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							
+						}catch (err){}						
+                    }
+					
+					if(this.id==6){							
+						try {	
+nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 22,  label: 'Vincent Kapelou\ncurrent Minister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							]);
+							
+							nodes.update([
+							
+							{id: 23,  label: 'Cesare Nespola\nex Minister of Health',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							//{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							//{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							//{id:26,from: 12,   to: 27,   label: 'uncle',length: 200}
+							{id:11, from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+							 {id:27, from: 22,   to: 23,   label: 'successor',length: 200},
+							 {id:28, from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							
+						}catch (err){}						
+                    }
+					
+					if(this.id==13){							
+						try {	
+nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 22,  label: 'Vincent Kapelou\ncurrent Minister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							]);
+							
+							nodes.update([
+							
+							{id: 23,  label: 'Cesare Nespola\nex Minister of Health',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-3.png', shape: 'image'},
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							//{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							//{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							//{id:26,from: 12,   to: 27,   label: 'uncle',length: 200}
+							{id:11, from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+							 {id:27, from: 22,   to: 23,   label: 'successor',length: 200},
+							 {id:28, from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							
+							nodes.remove([
+							{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}
+							]);
+						}catch (err){}						
+                    }
+					
+					if(this.id==8){							
+						try {	
+nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 22,  label: 'Vincent Kapelou\ncurrent Minister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 12,  label: 'Mandor Vann\nPOK leader candidate',     image: DIR + 'pok-1.png', shape: 'image'},
+							
+		{id: 27,  label: 'Isia Vann\nPOK member',     image: DIR + 'pok-1.png', shape: 'image'},
+							]);
+							
+							nodes.update([
+							
+							{id: 23,  label: 'Cesare Nespola\nex Minister of Health',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 9,  label: 'Elian Kazel\n2nd POK leader',    image: DIR + 'pok-3.png', shape: 'image'},
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+							{id:11, from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+							 {id:27, from: 22,   to: 23,   label: 'successor',length: 200},
+							 {id:28, from: 22,   to: 24,   label: 'nephew',length: 200},
+							 
+		{id:10, from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+							]);
+							
+							nodes.remove([
+							{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}
+							]);
+							
+						}catch (err){}						
+                    }
+					
+					if(this.id==9){							
+						try {	
+nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 22,  label: 'Vincent Kapelou\ncurrent Minister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 12,  label: 'Mandor Vann\nPOK leader candidate',     image: DIR + 'pok-1.png', shape: 'image'},
+							
+		{id: 27,  label: 'Isia Vann\nPOK member',     image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 8,   label: 'Lucio Jakab\nSOW co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 11,  label: 'Silvia Marek\nPOK leader candidate,SOW founder',     image: DIR + 'pok-1.png', shape: 'image'},
+							]);
+							
+							nodes.update([
+							
+							{id: 23,  label: 'Cesare Nespola\nex Minister of Health',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 9,  label: 'Elian Kazel\n2nd POK leader',    image: DIR + 'pok-3.png', shape: 'image'},
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+							{id:11, from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+							 {id:27, from: 22,   to: 23,   label: 'successor',length: 200},
+							 {id:28, from: 22,   to: 24,   label: 'nephew',length: 200},
+							 
+		{id:10, from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:7, from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		{id:9, from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+							]);
+							
+							nodes.remove([
+							{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}
+							]);
+							
+						}catch (err){}						
+                    }
+					
+					if(this.id==10){							
+						try {	
+nodes.remove([
+						{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}						
+						]);
+						nodes.add([
+				{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        		{id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+						]);						
+				edges.remove([
+							
+		{id:7,from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		
+		{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+		
+		{id:9,from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:10,from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		
+		{id:11,from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+		{id:12,from: 22,   to: 1,   label: 'oppose',length: 450,color:'darkred'},
+		
+       		 {id:14,from: 3,   to: 9,  label: 'father',length: 200},
+			 
+        		{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+        		{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+        		{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+        		{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+        		{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+        		{id:27,from: 22,   to: 23,   label: 'successor',length: 200},
+		{id:28,from: 22,   to: 24,   label: 'nephew',length: 200},
+							]);
+							nodes.remove([
+							{id: 9},{id: 8},{id: 10},{id: 11},{id: 12},{id: 27},{id: 13},{id: 14},{id: 15},{id: 22}
+							]);
+							
+							nodes.add([
+							{id: 9,  label: 'Elian Kazel\nPOK member',    image: DIR + 'pok-1.png', shape: 'image'},
+							
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 22,  label: 'Vincent Kapelou\ncurrent Minister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+							{id: 12,  label: 'Mandor Vann\nPOK leader candidate',     image: DIR + 'pok-1.png', shape: 'image'},
+							
+		{id: 27,  label: 'Isia Vann\nPOK member',     image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 8,   label: 'Lucio Jakab\nSOW co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 11,  label: 'Silvia Marek\nPOK leader candidate,SOW founder',     image: DIR + 'pok-1.png', shape: 'image'},
+							]);
+							
+							nodes.update([
+							
+							{id: 23,  label: 'Cesare Nespola\nex Minister of Health',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-1.png', shape: 'image'},
+							{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+							{id: 9,  label: 'Elian Kazel\n2nd POK leader',    image: DIR + 'dead.png', shape: 'image'},
+							]);
+							
+							edges.add([ 
+							{id:14,from: 3,   to: 9,  label: 'father',length: 200},
+							{id:8,from: 10,   to: 20,   label: 'against/investigate',length: 400},
+							{id:22,from: 12,   to: 13,   label: 'uncle',length: 200},
+							{id:23,from: 27,   to: 13,  label: 'brother',length: 200},
+							{id:24,from: 14,   to: 13,   label: 'mother',length: 200},
+							{id:25,from: 15,   to: 13,   label: 'father',length: 200},
+							{id:26,from: 12,   to: 27,   label: 'uncle',length: 200},
+							{id:11, from: 23,   to: 1,   label: 'support',length: 450,color:'darkgreen'},
+							 {id:27, from: 22,   to: 23,   label: 'successor',length: 200},
+							 {id:28, from: 22,   to: 24,   label: 'nephew',length: 200},
+							 
+		{id:10, from: 12,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+		{id:7, from: 8,   to: 11,   label: 'SOW co-founder',length: 200},
+		{id:9, from: 11,   to: 9,   label: 'possible candidate',length: 400,color:'yellow'},
+							]);
+							
+							nodes.remove([
+							{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:18}
+							]);
+							
+						}catch (err){}						
+                    }
+					
+					
+					
+					
+					
+					}
+                    }
+                }
+            },
+			
+                areaspline: {
+                    stacking: 'normal',
+                marker: {
+                    enabled: false,
+                    symbol: 'circle',
+                    radius: 0,
+                    states: {
+                        hover: {
+                            enabled: true
+                        }
+                    }
+                }
+                },
+				
+				pie: {
+				
+                dataLabels: {
+				  
+                    enabled: true,
+                    distance: 3,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white',
+                        textShadow: '0px 1px 2px black'
+                    }
+                },
+            }
+            },
+			
+			
+			series : [{
+				name : 'staff changes',
+				data :  peopleData,
+				type: 'spline',
+				tooltip: {
+					valueDecimals: 2
+				},					
+			},{
+				name : 'Events Valuence',
+				data :  basicEvents,
+				type: 'areaspline',
+				tooltip: {
+					valueDecimals: 2
+				},
+				marker: {
+                    enabled: false
+                },
+				yAxis: 1,
+				lineWidth: 1,
+						fillColor: '#228B22',
+						negativeFillColor: '#EE2C2C',
+						lineColor: 'gray',
+			},
+			
+			
+			
+			{
+				name : 'death',
+				data :  keyword_death,
+				type: 'areaspline',
+				tooltip: {
+					valueDecimals: 2
+				},
+				marker: {
+                    enabled: false
+                },
+				color: '#FF3030',
+				yAxis: 2,
+			},{
+				name : 'protest',
+				data :  keyword_protest,
+				type: 'areaspline',
+				tooltip: {
+					valueDecimals: 2
+				},
+				marker: {
+                    enabled: false
+                },
+				color:'#EEEE00',
+				yAxis: 2,
+			},{
+				name : 'violence',
+				data :  keyword_violence,
+				type: 'areaspline',
+				tooltip: {
+					valueDecimals: 2
+				},
+				marker: {
+                    enabled: false
+                },
+				yAxis: 2,
+				color:'#3A5FCD'
+			},{
+				name : 'arrests',
+				data :  keyword_arrest,
+				type: 'areaspline',
+				tooltip: {
+					valueDecimals: 2
+				},
+				marker: {
+                    enabled: false
+                },
+				yAxis: 2,
+				color:'#66CD00'
+			},
+			
+			{
+            type: 'pie',
+            name: 'Consumption',
+            innerSize: '20%',
+            data: [
+     			{name:'Death',y:28.2,color: '#FF3030'},
+				{name:'Protest',y:20.1,color:'#EEEE00'},
+				{name:'Violence',y:15.9,color:'#3A5FCD'},
+				{name:'water',y:13.0},
+				{name:'Juliana',y:9.9},
+				{name:'Arrest',y:6.5,color:'#66CD00'},
+				{name:'Environment',y:5.7},				
+            ],			
+            center: ['112%', '94%'],
+            size: '33%',
+            showInLegend: false,
+			}
+/*
+			{
+			    name : 'traffic events',
+				data :  jetdata,
+				type: 'bubble',	
+                color: '#8B658B',	
+				tooltip: {
+					valueDecimals: 2
+				},				
+				//yAxis: 1,
+
+			},
+			
+			{
+			    name : 'fire',
+				data:  keyword_fire,
+				type: 'areaspline',	
+                color: '#FF3030',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2,
+				},				
+				yAxis: 1,
+
+			},
+			
+			{
+			    name : 'missing',
+				data :  keyword_missing,
+				type: 'areaspline',	
+                color: '#FFD700',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2
+				},				
+				yAxis: 1,
+
+			},
+			
+			{
+			    name : 'kidnapping',
+				data :  keyword_kidnapping,
+				type: 'areaspline',	
+                color: '#1E90FF',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2
+				},				
+				yAxis: 1,
+
+			},
+
+            {
+			    name : 'POK',
+				data :  keyword_pok,
+				type: 'areaspline',	
+                color: '#363636',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2
+				},				
+				yAxis: 1,
+
+			},
+			{
+		        type: 'flags',
+		        name: 'Key events',
+				color :'#CD853F',
+				fillColor :'#DEB887',
+				
+		        data: [
+				{
+				    x: Date.UTC(2014,0,20,10,15,0),
+					title: 'Fire alarm',
+					name:'fire alarm has gone off at GAStech.'
+				},{
+					x: Date.UTC(2014,0,20,19,47,0),
+					title: '14 Missing',
+					name: 'Reported 14 missing GASTech Employees,including 5 executive officers:GAStech CEO,CFO,CIO,COO,and Environmental Officer.'
+				},{
+				    x:Date.UTC(2014,0,20,23,0,0), 
+					title:'Report 1 of 20th',
+					name: "What we know: <br>14 GAStech employees missing and kidnapped. <br>Edvard Vann, a GAStech - Kronos security guard was interrogated and released.<br>POK was involved in today's events. <br>Unclear:who are the missing. <br>10:00, Abila Fire Department trucks responded to fire."
+				},{
+				    x:Date.UTC(2014,0,21,7,15,0),
+					title:'Report 2',
+					name:'What we know: <br>A fire alarm sounded at GAStech-Kronos headquarters 10:15 yesterday. <br>Police announced 14 GAStech employees disappeared. <br>Officials from Tethys - likely GAStech corporate officials - arrived late last night to the Abila Police.  <br>no information about who is missing.'
+				},{
+				    x:Date.UTC(2014,0,21,9,11,0),
+					title:'14 to 10',
+					name: 'police revised the number of missing from 14 to 10.'
+				},{
+					x: Date.UTC(2014,0,21,12,0,0),
+					title: 'POK wants Ransom',
+					name: 'POK made an anouncement to claim their position and incite citizens, and demanding a $20M ransom from GAStech CEO'
+				},
+				
+				],
+		        //onSeries: 'basic',
+		        shape: 'squarepin',
+				
+				
+		    }, 
+			
+			{
+            type: 'pie',
+            name: 'Topic consumption',
+            data: [
+			    {name:'fire', y:27.1, color: '#FF3030'},
+                {name:'kidnapping', y:24.1, color: '#1E90FF'},
+                {name:'POK', y:18.3, color:'#363636'},
+                {name:'missing',  y:15.0, color: '#FFD700'},
+                {name:'jet',  y:9.5, color:'#8B658B'},
+				{name:'others', y:6.1,color:'#EEE8AA'},
+			],
+            center: ['108%', '78%'],
+            size: 150,
+            showInLegend: false,
+			
+        }
+		
+		*/
+		]
+			
+			
+			
+		}, function(chart) { // on complete
+     
+        chart.renderer.image('img/people.png', '84%', '17.5%', 20, 20).add();
+		chart.renderer.text('Leader changes', 785, 120).add();
+
+
+        chart.renderer.image('img/death.png', '84%', '21%', 20, 20).add();
+		chart.renderer.text('Death', 785, 140).add();
+
+        chart.renderer.image('img/conflict.gif', '84%', '24%', 20, 20).add();
+		chart.renderer.text('Protests/Conflicts', 785, 160).add();
+		
+		chart.renderer.text('positive/peaceful', 70, 280).add();
+		chart.renderer.text('negative/resistant', 70, 380).add();
+		
+        
+    });
+});
+var DIR = 'img/soft-scraps-icons/';
+
+
+var peopleData = [
+{id:1,x:Date.UTC(1997,3,20),y:7,name:'7 citizens started the POK:<br>Henk Bodrogi, Carmine Osvaldo, Ale L. Hanne, Jeroen Karel, Valentine Mies, Yanick Cato and Joreto Katell',},
+	{id:2,x:Date.UTC(1997,5,20),y:10,name:'Henk Bodrogi became the 1st leader.',marker:{
+      enabled: true, 
+      symbol:"url(img/people.png)"
+    }},
+	{id:3,x:Date.UTC(1997,7,10),y:20,name:'Protectors of Kronos(POK) founded'},
+
+	{id:4,x:Date.UTC(1998,7,18),y:40,name:'10-year old Juliana Vann died of toxicity pollution',marker:{
+      enabled: true, 
+      symbol:"url(img/death.png)"
+    }},
+	
+	{id: 5 ,x:Date.UTC( 1998,10,15 ),y: 90 ,name:"POK representatives meet with kronos minister of health "},
+	{id:12, x:Date.UTC(2001,5,1),y:115,name:"Minister of Health died.",marker:{
+      enabled: true, 
+      symbol:"url(img/death.png)"
+    }},
+	
+	//{id:5,x:Date.UTC(1999,0,20),y:90,name:'POK members increased'},
+	
+	{id:6,x:Date.UTC(2001,9,1),y:125,name:"Henk Bodrogi stepped down,Elian Karel became 2nd leader",marker:{
+      enabled: true, 
+      symbol:"url(img/people.png)"
+    }},
+	{id:13,x:Date.UTC(2001,11,20),y:135,name:"Original 7 members all quit."},	
+	
+	{id:7,x:Date.UTC(2002,4,20),y:150,name:"POK focused on recuiting members and peaceful rallies"},
+	{id:8,x:Date.UTC(2004,3,20),y:200,name:"Mandor Vann retired from the Kronos military."},
+	
+	{id:9,x:Date.UTC(2005,1,1),y:210,name:"Marek and her group Save Our Wildlands joined POK."},
+	
+	{id:10,x:Date.UTC(2009,5,20),y:240,name:"POK's 2nd leader Elian Karel died.",marker:{
+      enabled: true, 
+      symbol:"url(img/death.png)"
+    }},	
+	{id:14,x:Date.UTC(2010,0,22),y:240,name:"Silvia Marek became the 3rd leader.",marker:{
+      enabled: true, 
+      symbol:"url(img/people.png)"
+    }},	
+	{id:11,x:Date.UTC(2013,1,21,13,0,0),y:250,name:'Now POK has 200~300 members.'},
+]
+
+
+
+
+
+var basicEvents = [
+	{x:Date.UTC(1997,3,20),y:3,name:'7 citizens concerned about pollution, started the group'},
+
+	{x:Date.UTC(1997,5,20),y:4,name:'Henk Bodrogi became the 1st leader.'},
+	{x:Date.UTC(1997,7,10),y:5,name:'Protectors of Kronos(POK) founded'},
+	{x:Date.UTC(1997,7,20),y:-2,name:'The group take statistics of health to Abila office, rejected.'},
+	{x:Date.UTC(1997,8,20),y:0,name:'Henk Bodrogi’s wife, Mira became ill.'},
+	
+	{x:Date.UTC(1997,9,20),y:-3,name:'POK wanted to engage GAStech about River problems,received denial'},
+
+	{x:Date.UTC(1998,7,18),y:0,name:'10-year old Juliana Vann died of toxicity pollution'},
+	{x:Date.UTC(1998,8,1),y:5,name:'POK across Kronos began rising.'},
+	
+{id: 420 ,x:Date.UTC( 1998,10,15 ),y: 5 ,name:"POK representatives meet with kronos minister of health "},
+
+	{x:Date.UTC(1998,11,20),y:4,name:'WFA found pollution source is drilling made by GAStech'},
+	{x:Date.UTC(1999,0,20),y:3,name:'POK members increased'},
+	{x:Date.UTC(1999,2,20),y:0,name:'POK moved primary lobbying efforts to the capital'},
+{id: 267 ,x:Date.UTC( 1999,6,08 ),y: 6 ,name:"minister of health to propose sponsor and solution to town poisoning "},
+{id: 391 ,x:Date.UTC( 2001,2,22 ),y: -5 ,name:"Kronos Government voted down the health&water tax, POK efforts stalled "},
+	{x:Date.UTC(2001,5,1),y:-1,name:"Minister of Health died."},
+{id: 129 ,x:Date.UTC( 2001,7,31 ),y: -8 ,name:"activists block traffic near Tiskele bend fields,protesting. supporters were arrested",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+	{x:Date.UTC(2001,9,1),y:0,name:"Henk Bodrogi stepped down,Elian Karel became 2nd leader"},	
+	{x:Date.UTC(2001,11,20),y:0,name:"Original 7 members all quit."},	
+
+	{x:Date.UTC(2002,4,20),y:5,name:"POK focused on recuiting members and peaceful rallies"},
+	{x:Date.UTC(2004,3,20),y:0,name:"Mandor Vann retired from the Kronos military."},	
+	{x:Date.UTC(2005,1,1),y:0,name:"Marek and her group Save Our Wildlands joined POK."},	
+	
+{id: 113 ,x:Date.UTC( 2005,8,25 ),y: -16 ,name:"Elodis protests turn to riots and arrests(of POK)",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+	{x:Date.UTC(2006,0,20),y:-6,name:"POK has increasing disobedience and militant action."},
+	{x:Date.UTC(2006,8,20),y:0,name:"POK alleged government corruption and possible collusion"},	
+{id: 476 ,x:Date.UTC( 2009,1,19 ),y: -7 ,name:"gastech headquarters blocked by POK, ends in the arrests",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+{id: 675 ,x:Date.UTC( 2009,1,21 ),y: -4 ,name:"Gastech CEO sanjorge jr condemns POK like terrorists"},
+{id: 631 ,x:Date.UTC( 2009,1,23 ),y: -5 ,name:"Government blames POK for a deadly attack on police headquarters earlier,POK declared"},
+{id: 447 ,x:Date.UTC( 2009,2,08 ),y: 4 ,name:"POK rally draws thousands of supporters ",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+{id: 798 ,x:Date.UTC( 2009,2,13 ),y: -10 ,name:"POK leader Elian Karel was arrested "},
+{id: 445 ,x:Date.UTC( 2009,5,20 ),y: -4 ,name:"elian karel died in kronos prison "},
+{id: 14 ,x:Date.UTC( 2009,5,21 ),y: -8 ,name:"protest turns violent in abila "},
+{id: 334 ,x:Date.UTC( 2010,5,14 ),y: 5 ,name:"anniversary of protests"},
+{id: 158 ,x:Date.UTC( 2010,5,21 ),y: 8 ,name:"in memory:  the death of elian karel, a year later"},
+{id: 604 ,x:Date.UTC( 2010,5,21 ),y: -5 ,name:"government responds to another round of protests"},
+{id: 766 ,x:Date.UTC( 2010,5,21 ),y: -5 ,name:"POK protest at abila police headquarters ",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+{id: 754 ,x:Date.UTC( 2011,5,22 ),y: -4 ,name:"the POK demonstrators destroy district of Siopa",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+{id: 527 ,x:Date.UTC( 2011,6,28 ),y: -8 ,name:"the government labels POK 'threatens public' "},
+{id: 584 ,x:Date.UTC( 2012,2,08 ),y: -8 ,name:"the minister of health receives threats of POK",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+{id: 132 ,x:Date.UTC( 2012,5,20 ),y: -4 ,name:"abila police break up sit-in turned violent at the presidential manor "},
+{id: 570 ,x:Date.UTC( 2012,5,20 ),y: -10 ,name:"POK remembers martyred leader, POK anniversary rally ends in riot",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+{id: 194 ,x:Date.UTC( 2012,5,23 ),y: -5 ,name:"President Kapelou calls POK 'one group of criminals'"},
+{id: 184 ,x:Date.UTC( 2012,7,22 ),y: -5 ,name:"With the 3rd anniversary of Elian Karel's death approaching,who are the protesters?"},
+{id: 843 ,x:Date.UTC( 2012,10,12 ),y: 3 ,name:"demonstration attracts thousands in spite of rain"},
+{id: 252 ,x:Date.UTC( 2013,5,20 ),y: -9 ,name:"annual POK rally ends in riot, again.<br> POK demands for 14 years: an end to the corruption of the Kronos government officials,<br>and the cleanup of the toxic waste dump that has become the Tiskele River near Elodis",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},
+{id: 231 ,x:Date.UTC( 2013,11,17 ),y: -9 ,name:"bronze attack of time of day by POK",marker:{
+      enabled: true, 
+      symbol:"url(img/conflict.gif)"
+    }},	
+	
+]
+
+
+
+keyword_arrest=[
+{x: Date.UTC( 1997,2,18 ),  y: 0 },
+{x: Date.UTC( 1998,7,18 ),  y: 0 },
+{x: Date.UTC( 1998,11,15 ) , y: 0 },
+{x: Date.UTC( 1999,7,08 ) , y: 0 },
+{x: Date.UTC( 2001,3,22 ) , y: 0 },
+{x: Date.UTC( 2001,8,31 ) , y: 3 },
+{x: Date.UTC( 2002,4,31 ) , y: 0 },
+{x: Date.UTC( 2004,0,31 ) , y: 0 },
+{x: Date.UTC( 2005,9,25 ) , y: 1 },
+{x: Date.UTC( 2009,2,19 ) , y: 1 },
+{x: Date.UTC( 2009,2,21 ) , y: 0 },
+{x: Date.UTC( 2009,2,23 ) , y: 0 },
+{x: Date.UTC( 2009,3,08 ) , y: 0 },
+{x: Date.UTC( 2009,3,13 ) , y: 1 },
+{x: Date.UTC( 2009,6,20 ) , y: 1 },
+{x: Date.UTC( 2009,6,21 ) , y: 0 },
+{x: Date.UTC( 2009,6,22 ) , y: 1 },
+{x: Date.UTC( 2010,6,14 ) , y: 0 },
+{x: Date.UTC( 2010,6,21 ) , y: 1 },
+{x: Date.UTC( 2011,6,22 ) , y: 0 },
+{x: Date.UTC( 2011,7,28 ) , y: 1 },
+{x: Date.UTC( 2012,3,08 ) , y: 0 },
+{x: Date.UTC( 2012,6,20 ) , y: 1 },
+{x: Date.UTC( 2012,6,20 ) , y: 0 },
+{x: Date.UTC( 2012,6,23 ) , y: 0 },
+{x: Date.UTC( 2012,8,22 ) , y: 1 },
+{x: Date.UTC( 2012,11,12 ) , y: 0 },
+{x: Date.UTC( 2013,6,20 ) , y: 0 },
+{x: Date.UTC( 2013,12,17 ) , y: 0 },
+]
+
+keyword_protest=[
+{x: Date.UTC( 1998,2,18 ),  y: 0 },
+{x: Date.UTC( 1998,7,18 ),  y: 1 },
+{x: Date.UTC( 1998,11,15 ) , y: 0 },
+{x: Date.UTC( 1999,7,08 ) , y: 0 },
+{x: Date.UTC( 2001,3,22 ) , y: 0 },
+{x: Date.UTC( 2001,8,31 ) , y: 2 },
+{x: Date.UTC( 2002,4,31 ) , y: 0 },
+{x: Date.UTC( 2004,0,31 ) , y: 0 },
+{x: Date.UTC( 2005,9,25 ) , y: 3 },
+{x: Date.UTC( 2009,2,19 ) , y: 0 },
+{x: Date.UTC( 2009,2,21 ) , y: 2 },
+{x: Date.UTC( 2009,2,23 ) , y: 0 },
+{x: Date.UTC( 2009,3,08 ) , y: 1 },
+{x: Date.UTC( 2009,3,13 ) , y: 0 },
+{x: Date.UTC( 2009,6,20 ) , y: 0 },
+{x: Date.UTC( 2009,6,21 ) , y: 1 },
+{x: Date.UTC( 2009,6,22 ) , y: 1 },
+{x: Date.UTC( 2010,6,14 ) , y: 2 },
+{x: Date.UTC( 2010,6,21 ) , y: 3 },
+{x: Date.UTC( 2011,6,22 ) , y: 0 },
+{x: Date.UTC( 2011,7,28 ) , y: 0 },
+{x: Date.UTC( 2012,3,08 ) , y: 0 },
+{x: Date.UTC( 2012,6,20 ) , y: 0 },
+{x: Date.UTC( 2012,6,20 ) , y: 0 },
+{x: Date.UTC( 2012,6,23 ) , y: 0 },
+{x: Date.UTC( 2012,8,22 ) , y: 2 },
+{x: Date.UTC( 2012,11,12 ) , y: 0 },
+{x: Date.UTC( 2013,6,20 ) , y: 0 },
+{x: Date.UTC( 2013,12,17 ) , y: 0 },
+]
+
+keyword_death=[
+{x: Date.UTC( 1998,2,18 ),  y: 0 },
+{x: Date.UTC( 1998,7,18 ),  y: 3 },
+{x: Date.UTC( 1998,11,15 ) , y: 0 },
+{x: Date.UTC( 1999,7,08 ) , y: 0 },
+{x: Date.UTC( 2001,3,22 ) , y: 0 },
+{x: Date.UTC( 2001,8,31 ) , y: 1 },
+{x: Date.UTC( 2002,4,31 ) , y: 0 },
+{x: Date.UTC( 2004,0,31 ) , y: 0 },
+{x: Date.UTC( 2005,9,25 ) , y: 0 },
+{x: Date.UTC( 2009,2,19 ) , y: 0 },
+{x: Date.UTC( 2009,2,21 ) , y: 1 },
+{x: Date.UTC( 2009,2,23 ) , y: 0 },
+{x: Date.UTC( 2009,3,08 ) , y: 0 },
+{x: Date.UTC( 2009,3,13 ) , y: 0 },
+{x: Date.UTC( 2009,6,20 ) , y: 3 },
+{x: Date.UTC( 2009,6,21 ) , y: 1 },
+{x: Date.UTC( 2009,6,22 ) , y: 2 },
+{x: Date.UTC( 2010,6,14 ) , y: 2 },
+{x: Date.UTC( 2010,6,21 ) , y: 5 },
+{x: Date.UTC( 2011,6,22 ) , y: 0 },
+{x: Date.UTC( 2011,7,28 ) , y: 0 },
+{x: Date.UTC( 2012,3,08 ) , y: 1 },
+{x: Date.UTC( 2012,6,20 ) , y: 2 },
+{x: Date.UTC( 2012,6,20 ) , y: 0 },
+{x: Date.UTC( 2012,6,23 ) , y: 0 },
+{x: Date.UTC( 2012,8,22 ) , y: 1 },
+{x: Date.UTC( 2012,11,12 ) , y: 1 },
+{x: Date.UTC( 2013,6,20 ) , y: 0 },
+{x: Date.UTC( 2013,12,17 ) , y: 0 },
+
+]
+
+keyword_violence=[
+{x: Date.UTC( 1997,2,18 ),  y: 0 },
+{x: Date.UTC( 1998,7,18 ),  y: 0 },
+{x: Date.UTC( 1998,11,15 ) , y: 0 },
+{x: Date.UTC( 1999,7,08 ) , y: 0 },
+{x: Date.UTC( 2001,3,22 ) , y: 0 },
+{x: Date.UTC( 2001,8,31 ) , y: 1 },
+{x: Date.UTC( 2002,4,31 ) , y: 0 },
+{x: Date.UTC( 2004,0,31 ) , y: 0 },
+{x: Date.UTC( 2005,9,25 ) , y: 2 },
+{x: Date.UTC( 2009,2,19 ) , y: 0 },
+{x: Date.UTC( 2009,2,21 ) , y: 1 },
+{x: Date.UTC( 2009,2,23 ) , y: 0 },
+{x: Date.UTC( 2009,3,08 ) , y: 0 },
+{x: Date.UTC( 2009,3,13 ) , y: 0 },
+{x: Date.UTC( 2009,6,20 ) , y: 0 },
+{x: Date.UTC( 2009,6,21 ) , y: 2 },
+{x: Date.UTC( 2009,6,22 ) , y: 0 },
+{x: Date.UTC( 2010,6,14 ) , y: 1 },
+{x: Date.UTC( 2010,6,21 ) , y: 1 },
+{x: Date.UTC( 2011,6,22 ) , y: 0 },
+{x: Date.UTC( 2011,7,28 ) , y: 3 },
+{x: Date.UTC( 2012,3,08 ) , y: 0 },
+{x: Date.UTC( 2012,6,20 ) , y: 2 },
+{x: Date.UTC( 2012,6,20 ) , y: 0 },
+{x: Date.UTC( 2012,6,23 ) , y: 0 },
+{x: Date.UTC( 2012,8,22 ) , y: 2 },
+{x: Date.UTC( 2012,11,12 ) , y: 0 },
+{x: Date.UTC( 2013,6,20 ) , y: 0 },
+{x: Date.UTC( 2013,12,17 ) , y: 0 },
+
+]
+
+
+
+
+
+
+var DIR = 'img/soft-scraps-icons/';
+var nodesData=[
+        //pok-3 is leader
+        {id: 1,   label: 'Henk Bodrogi\nPOK 1st leader',   image: DIR + 'pok-3.png', shape: 'image'},
+        {id: 2,   label: 'Carmine Osvaldo\nPOK co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+        {id: 3,   label: 'Jeroen Karel\nPOK recruiter',  image: DIR + 'pok-1.png', shape: 'image'},
+        {id: 4,   label: 'Valentine Mies\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        {id: 5,   label: 'Joreto Katell\nPOK co-founder',   image: DIR + 'pok-1.png', shape: 'image'},
+        {id: 6,   label: 'Yanick Cato\nPOK co-founder', image: DIR + 'pok-1.png', shape: 'image'},
+        {id: 7,   label: 'Joclyn Reynolds\nWFA PM',     image: DIR + 'normal-1.png', shape: 'image'},
+        {id: 8,   label: 'Lucio Jakab\nSOW co-founder',  image: DIR + 'pok-1.png', shape: 'image'},
+       
+	   {id: 9,  label: 'Elian Kazel\nPOK 2nd leader',    image: DIR + 'dead.png', shape: 'image'},
+	   
+        {id: 10,  label: 'Lorenzo Di Stefano\nprofessor of UA,member of POK',     image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 11,  label: 'Silvia Marek\nPOK leader candidate,SOW founder',     image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 12,  label: 'Mandor Vann\nPOK leader candidate',     image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 13,  label: 'Julianna Vann\ndead for pollution',     image: DIR + 'dead.png', shape: 'image'},
+		{id: 14,  label: 'Lemual Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+		{id: 15,  label: 'Neske Vann',     image: DIR + 'normal-1.png', shape: 'image'},
+		{id: 16,  label: 'John Rathbuss\nExpert on kidnapped',     image: DIR + 'normal-1.png', shape: 'image'},
+		{id: 18,  label: 'Ale L.Hanne\nPOK co-founder',     image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 19,  label: 'Hank Fluss\nGAStech co-founder',     image: DIR + 'gastech-1.png', shape: 'image'},
+		{id: 20, label: 'Sten Sanjorge Jr.\nGAStech CEO',     image: DIR + 'gastech-2.png', shape: 'image'},
+		{id: 21,  label: 'Rufus Dymian\nGovernment spokesman',     image: DIR + 'normal-1.png', shape: 'image'},
+		{id: 24, label: 'President Kapelou\nKronos President',     image: DIR + 'normal-2.png', shape: 'image'},
+		{id: 23,  label: 'Cesare Nespola\nex Minister of Health',     image: DIR + 'dead.png', shape: 'image'},
+		
+		{id: 22,  label: 'Vincent Kapelou\ncurrent Minister of Health',     image: DIR + 'normal-1.png', shape: 'image'},
+		{id: 25,  label: 'Adrien Carmen\nPolice spokeman',     image: DIR + 'normal-1.png', shape: 'image'},
+		{id: 26,  label: 'Carmine Gurganus\nGAStech spokeman',     image: DIR + 'normal-1.png', shape: 'image'},
+		
+		{id: 27,  label: 'Isia Vann\nPOK member',     image: DIR + 'pok-1.png', shape: 'image'},
+		{id: 32,  label: 'Ingrid Barranco\nGAStech CFO',     image: DIR + 'gastech-1.png', shape: 'image'},
+		{id: 28,  label: 'Ada Campo-Corrente\nGAStech CIO',     image: DIR + 'gastech-1.png', shape: 'image'},
+		{id: 29,  label: 'Orhan Strum\nGAStech COO',     image: DIR + 'gastech-1.png', shape: 'image'},
+		{id: 30,  label: 'Willem Vasco-Pais\nEnvironmental Officer',     image: DIR + 'gastech-1.png', shape: 'image'},
+		
+		{id: 31,  label: 'Petrus Gerhard\nGAStech correspondent',     image: DIR + 'gastech-1.png', shape: 'image'}
+      ]
+
+	var edgesData=[
+	    {id:1, from: 1,   to: 2,   arrows:'to',label: 'old friends',length: 200},
+		{id:2, from: 1,   to: 3,   arrows:'to',label: 'group of 7',length: 200},
+		{id:3, from: 1,   to: 4,   arrows:'to',label: 'group of 7',length: 200},
+		{id:4, from: 1,   to: 5,   arrows:'to',label: 'group of 7',length: 200},
+		{id:5, from: 1,   to: 6,   arrows:'to',label: 'group of 7',length: 200},
+		{id:6, from: 1,   to: 18,   arrows:'to',label: 'group of 7',length: 200},
+		
+		{id:7, from: 8,   to: 11,   arrows:'to',label: 'SOW co-founder',length: 200},
+		
+		{id:8, from: 10,   to: 20,   arrows:'to',label: 'against/investigate',length: 400},
+		
+		{id:9, from: 11,   to: 9,   arrows:'to',label: 'possible candidate',length: 400,color:'darkblue'},
+		{id:10, from: 12,   to: 9,   arrows:'to',label: 'possible candidate',length: 400,color:'darkblue'},
+		
+		{id:11, from: 23,   to: 1,   arrows:'to',label: 'support',length: 450,color:'darkgreen'},
+		{id:12, from: 22,   to: 1,   arrows:'to',label: 'oppose',length: 450,color:'darkred'},
+		
+        {id:13, from: 7,   to: 1,   arrows:'to',label: 'support',length: 300},
+        {id:14, from: 3,   to: 9,  arrows:'to',label: 'father',length: 200},
+        {id:15, from: 20,   to: 19,   arrows:'to',label: 'manage',length: 200},
+		{id:16, from: 20,   to: 28,   arrows:'to',label: 'manage',length: 200},
+		{id:17, from: 20,   to: 29,   arrows:'to',label: 'manage',length: 200},
+		{id:18, from: 20,   to: 30,   arrows:'to',label: 'manage',length: 200},
+		{id:19, from: 20,   to: 31,   arrows:'to',label: 'manage',length: 200},
+		{id:20, from: 20,   to: 32,   arrows:'to',label: 'manage',length: 200},
+		{id:21, from: 16,   to: 20,   arrows:'to',label: 'help',length: 400},
+		
+        {id:22, from: 12,   to: 13,   arrows:'to',label: 'uncle',length: 200},
+        {id:23, from: 27,   to: 13,  arrows:'to',label: 'brother',length: 200},
+        {id:24, from: 14,   to: 13,   arrows:'to',label: 'mother',length: 200},
+        {id:25, from: 15,   to: 13,   arrows:'to',label: 'father',length: 200},
+        {id:26, from: 12,   to: 27,   arrows:'to',label: 'uncle',length: 200},
+        {id:27, from: 22,   to: 23,   arrows:'to',label: 'successor',length: 200},
+		{id:28, from: 22,   to: 24,   arrows:'to',label: 'nephew',length: 200},
+		
+		{id:29, from: 25,   to: 24,   arrows:'to',label: 'work for',length: 200},
+		{id:30, from: 21,   to: 24,   arrows:'to',label: 'work for',length: 200},
+		{id:31, from: 26,   to: 20,   arrows:'to',label: 'work for',length: 400},
+		{id:32, from: 23,   to: 24,   arrows:'to',label: 'work for',length: 400},
+		
+      ]
+
+
+    
+
+    var nodes = null;
+    var edges = null;
+    var graph = null;
+	
+	function toJSON (obj) {
+      return JSON.stringify(obj, null, 4);
+    }
+
+    function draw() {
+	
+	/*
+      // attach actions to the node buttons
+      $('#node-add').click(function () {
+        try {
+          nodes.add({
+            id: $('#node-id').val(),
+            label: $('#node-label').val()
+          });
+        }
+        catch (err) {
+          alert(err);
+        }
+      });
+      $('#node-update').click(function () {
+        try {
+          nodes.update({
+            id: $('#node-id').val(),
+            label: $('#node-label').val()
+          });
+        }
+        catch (err) {
+          alert(err);
+        }
+      });
+      $('#node-remove').click(function () {
+        try {
+          var id = $('#node-id').val();
+          nodes.remove(id);
+        }
+        catch (err) {
+          alert(err);
+        }
+      });
+
+      // attach actions to the edge buttons
+      $('#edge-add').click(function () {
+        try {
+          edges.add({
+            id: $('#edge-id').val(),
+            from: $('#edge-from').val(),
+            to: $('#edge-to').val()
+          });
+        }
+        catch (err) {
+          alert(err);
+        }
+      });
+      $('#edge-update').click(function () {
+        try {
+          edges.update({
+            id: $('#edge-id').val(),
+            from: $('#edge-from').val(),
+            to: $('#edge-to').val()
+          });
+        }
+        catch (err) {
+          alert(err);
+        }
+      });
+      $('#edge-remove').click(function () {
+        try {
+          var id = $('#edge-id').val();
+          edges.remove(id);
+        }
+        catch (err) {
+          alert(err);
+        }
+      });
+	  
+	  */
+      // create an array with nodes
+      nodes = new vis.DataSet();
+      nodes.on('*', function () {
+        $('#nodes').html(toJSON(nodes.get()));
+      });
+      nodes.add(nodesData);
+
+      // create an array with edges
+      edges = new vis.DataSet();
+      edges.on('*', function () {
+        $('#edges').html(toJSON(edges.get()));
+      });
+      edges.add(edgesData);
+	
+	
+	
+	var color = '#BFBFBF';
+	/*
+	nodes = [
+		
+
+      ];
+
+      // create connections
+      
+      edges = [
+
+      ];
+*/
+    //function draw() {
+      // create people
+      
+	  var mygraph = document.getElementById('mygraph');
+      var x = - mygraph.clientWidth / 2 + 50 - 200;
+      var y = - mygraph.clientHeight / 2 + 50;
+      var step = 70;
+      nodes.add({id: 1001, fixed:true,x: x, y: y,  label: 'GAStech',  image: DIR + 'gastech-1.png', shape: 'image'});
+	  nodes.add({id: 1002,  fixed:true,x: x, y: y + 120,  label: 'POK',  image: DIR + 'pok-1.png', shape: 'image'});
+	  nodes.add({id: 1003, fixed:true,x: x, y: y + 240,   label: 'Normal',  image: DIR + 'normal-1.png', shape: 'image'});
+	  nodes.add({id: 1004, fixed:true,x: x, y: y + 360,   label: 'Deceased',  image: DIR + 'dead.png', shape: 'image'});
+	  
+      // create a graph
+      var container = document.getElementById('mygraph');
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+      var options = {
+	  autoResize: true,
+
+	  edges: {
+          width: 2,
+          arrows:'to',
+          color: 'gray'
+        },
+      nodes: {
+          // default for all nodes
+          font: '16px arial',
+          shape: 'circle',
+          hidden:false,
+        },
+
+	  };
+      graph = new vis.Network(container, data, options);
+    }
+
+
+
+
+
+
+
+
+
+/*
+jetdata = [
+
+{y: 0, x:Date.UTC(2014,0,20,12,30,0), z: 3, id: 299, name: "A private jet left Abila with seven or eight businesses-type passengers, and seemed to be in a hurry. Destination unclear."},
+{y: 1, x:Date.UTC(2014,0,20,12,47,0), z: 2, id: 625, name: 'two police squad cars have arrived with lights and sirens.'} ,
+{y: 2, x:Date.UTC(2014,0,20,14,30,0), z:3, name: 'A classified jet left the airport of Abila with eight "bussiness type" people, seemed more relaxed than the first group and were celebrating something.'} ,
+{y: 1, x:Date.UTC(2014,0,20,15,12,0), z: 2, id: 426, name: 'Two police cars each with two policemen inside just left GAStech with no lights or sirens.'} ,
+{y: 2, x:Date.UTC(2014,0,20,15,20,0), z: 3, id: 699, name: 'The private plane left in 14:30 for Rome,Italy, limits to eight passengers, it has no connection with GAStech'} ,
+{y: 6, x:Date.UTC(2014,0,20,17,40,0), z: 1, id: 718, name: 'ABILA AIRPORT CONFIRMS TWO PRIVATE JETS LEFT TODAY.'} ,
+{y: 1, x:Date.UTC(2014,0,20,17,44,0), z: 1, id: 15, name: 'The identity of first mystery jet left today remains disowned.'} ,
+{y: 1, x:Date.UTC(2014,0,20,17,48,0), z: 2, id: 429, name: 'Two private jets left Abila Airport today with 14~16 passengers in all.The second private jet left for Rome, Italy. First one not confirmed.'} ,
+{y: 3, x:Date.UTC(2014,0,20,18,10,0), z: 3, id: 26, name: 'The GAStech executive jet bearing CEO arrived in Tethys a few hours ago,it refueled and left for Abila with 6 civil employees of GAStech'} ,
+{y: 2, x:Date.UTC(2014,0,20,18,30,0), z: 3, id: 31, name: 'The GAStech executive jet arrived at Kronos. The occupants(likely GAStech corporate officials) were taken by limousine to the Abila Police.'} ,
+]
+
+keyword_fire=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 5 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 3 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 5 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 1 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 1 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 3 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 2 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 2 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 2 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 4 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 2 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 1 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 3 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 2 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 2 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,42,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 2 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,6,30,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 3 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 0 },
+]
+
+keyword_missing=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 1 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 1 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 2 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 1 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 1 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 1 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,42,0) , y: 2 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 2 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 3 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,6,30,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 1 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 2 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 3 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 3 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 1 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 0 },
+]
+
+keyword_kidnapping=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 1 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 3 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 4 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 1 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,42,0) , y:0 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 1 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 3 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,6,30,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 1 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 1 },
+]
+
+keyword_pok=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 2 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 2 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,42,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 1 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 2 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 1 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 1 },
+]
+*/
+		</script>
+	</head>
+	<body>
+<script src="Highcharts/Highstock-2.0.1/js/highstock.js"></script>
+<script src="Highcharts/Highcharts-4.0.1/js/highcharts-more.js"></script>
+<script src="Highcharts/Highstock-2.0.1/js/modules/exporting.js"></script>
+
+
+</html>

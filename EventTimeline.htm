@@ -1,0 +1,737 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highstock Example</title>
+
+		<script type="text/javascript" src="Highcharts/Highcharts-4.0.1/js/jquery.min.js"></script>
+		<script type="text/javascript">
+$(function() {
+
+	//$.getJSON('data.js', function(data) {
+		// Create the chart
+		$('#container').highcharts({
+			chart: {
+                zoomType: 'x',
+				//renderTo: 'container'
+            },
+			
+			rangeSelector : {
+			    enabled: true,
+			},
+
+
+			title : {
+				text : 'TimeLine of events'
+			},
+			
+			subtitle : {
+			    text : 'Jan.20th ~ Jan.21st'
+			},
+			
+			xAxis: {
+                type: 'datetime',
+				ordinal: false,
+                minRange: 14 * 24 * 3600 // fourteen days
+            },
+            yAxis:  [{
+			    min:-3,
+				max:13,
+		        labels: {
+		    		align: 'right',
+		    		x: -3
+		    	},
+		        title: {
+		            text: 'Events by Importace'
+		        },
+		        height: '50%',
+		        lineWidth: 2
+		    }, {
+		    	labels: {
+		    		align: 'right',
+		    		x: -3
+		    	},
+		        title: {
+		            text: 'Topics'
+		        },
+		        top: '55%',
+		        height: '36%',
+		        offset: 0,
+		        lineWidth: 2,
+				max: 6
+		    }],
+			
+			tooltip: {
+                //headerFormat: '<b>'+ Highcharts.dateFormat('%A, %b %e, %Y') +'</b><br>',
+				//'<b>{point.x}</b><br>',
+				formatter: function() {
+				    if(this.point.name != null && this.x != null)
+					    var s =  Highcharts.dateFormat('%b %e, %H:%M', this.x) +'<br>'+'<span style="color:' + this.series.color + '">\u25CF</span>' +'<b>'+ this.series.name+ '</b><br>'+this.point.name
+				    else if(this.point.name == null)
+					    var s = Highcharts.dateFormat('%b %e, %H:%M', this.x)+'<br>'+'<span style="color:' + this.series.color + '">\u25CF</span>' +'<b>'+ this.series.name+ '</b><br>'+'Frequency: '+this.point.y
+					else
+					    var s = '<span style="color:' + this.point.color + '">\u25CF</span>' +'<b>'+ this.point.name+ '</b>: '+ this.point.y +'%'
+				return s;
+				},
+				
+				crosshairs: true,
+            },
+			
+			navigator: {
+			    enabled: true
+			},
+			
+			credits: {
+			    enabled: false
+			},
+			
+			exporting: {
+			    sourceWidth: 1366
+			},
+			
+			legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                //borderWidth: 0,
+				y:-100
+            },
+			
+			plotOptions: {
+                areaspline: {
+                    stacking: 'normal',
+					lineWidth: 1.5
+                },
+				
+				pie: {
+				
+                dataLabels: {
+				  
+                    enabled: true,
+                    distance: -15,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white',
+                        textShadow: '0px 1px 2px black'
+                    }
+                },
+            }
+            },
+			
+			
+			series : [
+			
+			{
+				name : 'basic events',
+				data :  bubbleData,
+				type: 'bubble',
+				tooltip: {
+					valueDecimals: 2
+				},					
+			},
+
+			{
+			    name : 'traffic events',
+				data :  jetdata,
+				type: 'bubble',	
+                color: '#8B658B',	
+				tooltip: {
+					valueDecimals: 2
+				},				
+				//yAxis: 1,
+
+			},
+			
+			{
+			    name : 'fire',
+				data:  keyword_fire,
+				type: 'areaspline',	
+                color: '#FF3030',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2,
+				},				
+				yAxis: 1,
+
+			},
+			
+			{
+			    name : 'missing',
+				data :  keyword_missing,
+				type: 'areaspline',	
+                color: '#FFD700',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2
+				},				
+				yAxis: 1,
+
+			},
+			
+			{
+			    name : 'kidnapping',
+				data :  keyword_kidnapping,
+				type: 'areaspline',	
+                color: '#1E90FF',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2
+				},				
+				yAxis: 1,
+
+			},
+
+            {
+			    name : 'POK',
+				data :  keyword_pok,
+				type: 'areaspline',	
+                color: '#363636',
+                marker: {
+                    enabled: false
+                },		
+				tooltip: {
+					valueDecimals: 2
+				},				
+				yAxis: 1,
+
+			},
+			{
+		        type: 'flags',
+		        name: 'Key events',
+				color :'#CD853F',
+				fillColor :'#DEB887',
+				
+		        data: [
+				{
+				    x: Date.UTC(2014,0,20,10,15,0),
+					title: 'Fire alarm',
+					name:'fire alarm has gone off at GAStech.'
+				},{
+					x: Date.UTC(2014,0,20,19,47,0),
+					title: '14 Missing',
+					name: 'Reported 14 missing GASTech Employees,including 5 executive officers:GAStech CEO,CFO,CIO,COO,and Environmental Officer.'
+				},{
+				    x:Date.UTC(2014,0,20,23,0,0), 
+					title:'Report 1 of 20th',
+					name: "What we know: <br>14 GAStech employees missing and kidnapped. <br>Edvard Vann, a GAStech - Kronos security guard was interrogated and released.<br>POK was involved in today's events. <br>Unclear:who are the missing. <br>10:00, Abila Fire Department trucks responded to fire."
+				},{
+				    x:Date.UTC(2014,0,21,7,15,0),
+					title:'Report 2',
+					name:'What we know: <br>A fire alarm sounded at GAStech-Kronos headquarters 10:15 yesterday. <br>Police announced 14 GAStech employees disappeared. <br>Officials from Tethys - likely GAStech corporate officials - arrived late last night to the Abila Police.  <br>no information about who is missing.'
+				},{
+				    x:Date.UTC(2014,0,21,9,11,0),
+					title:'14 to 10',
+					name: 'police revised the number of missing from 14 to 10.'
+				},{
+					x: Date.UTC(2014,0,21,12,0,0),
+					title: 'POK wants Ransom',
+					name: 'POK made an anouncement to claim their position and incite citizens, and demanding a $20M ransom from GAStech CEO'
+				},
+				],
+		        //onSeries: 'basic',
+		        shape: 'squarepin',
+				
+				
+		    }, 
+			
+			{
+            type: 'pie',
+            name: 'Topic consumption',
+            data: [
+			    {name:'fire', y:27.1, color: '#FF3030'},
+                {name:'kidnapping', y:24.1, color: '#1E90FF'},
+                {name:'POK', y:18.3, color:'#363636'},
+                {name:'missing',  y:15.0, color: '#FFD700'},
+                {name:'jet',  y:9.5, color:'#8B658B'},
+				{name:'others', y:6.1,color:'#EEE8AA'},
+			],
+            center: ['105%', '78%'],
+            size: 150,
+            showInLegend: false,
+			
+        }
+		]
+			
+			
+			
+		});
+	//});
+
+});
+
+var bubbleData = [
+//{x:Date.UTC(1970,  9, 27, 23, 06,0),y:36,z:1,z:1,name:'this is a bubble'},
+{x:Date.UTC(2014,0,20,9,0,0),y:0,z:0.98,name:''},
+{y: 0, x:Date.UTC(2014,0,20,9,26,0), z: 1, id: 348, name: 'GAStech CEO is celebrating the successful initial public offering of his company.GAStech will contact Kapelou president, vary members of Council and ministers.'} ,
+{y: 3, x:Date.UTC(2014,0,20,10,15,0), z: 4, id: 10, name: 'fire alarm has gone off at GAStech.'} ,
+{y: 1, x:Date.UTC(2014,0,20,10,20,0), z: 2, id: 171, name: "producer doubted it's an anti-fire practice.people doubted it was a fire drill."},
+
+{y: 1, x:Date.UTC(2014,0,20,10,25,0), z: 1, id: 470, name: 'no confirmation of a bomb threat'} ,
+{y: 2, x:Date.UTC(2014,0,20,10,26,0), z: 2, id: 563, name: 'So far no evidence of smoke or fire.'} ,
+{y: 0, x:Date.UTC(2014,0,20,10,27,0), z: 1, id: 551, name: 'this evacuation had a threat of the bomb.'} ,
+{y: 1, x:Date.UTC(2014,0,20,10,30,0), z: 1, id: 539, name: 'The fire unit of Abila answers the alarm.'} ,
+{y: 0, x:Date.UTC(2014,0,20,10,35,0), z: 1, id: 458, name: 'No smoke is visible, raising concerns of an actual bomb threat.'} ,
+{y: 1, x:Date.UTC(2014,0,20,10,40,0), z: 1, id: 298, name: 'GAStech executives left the building after meeting to the reception at the capitol building.'} ,
+{y: 0, x:Date.UTC(2014,0,20,10,49,0), z: 1, id: 537, name: 'Firemen have entered the building.'} ,
+{y: 1, x:Date.UTC(2014,0,20,10,50,0), z: 2, id: 710, name: 'fire alarm was pulled in response to a bomb threat.'} ,
+{y: 0, x:Date.UTC(2014,0,20,10,52,0), z: 3, id: 350, name: 'CEO arrived at the capitol building a few minutes ago, and not reappeared.'} ,
+{y: 2, x:Date.UTC(2014,0,20,11,0,0), z: 1, id: 176, name: 'no indication of what happened; employees felt the fire signaler.'} ,
+{y: 1, x:Date.UTC(2014,0,20,11,30,0), z: 1, id: 203, name: 'fire removed, civil employees communicated.'} ,
+{y: 1, x:Date.UTC(2014,0,20,11,30,0), z: 1, id: 415, name: 'Some fire officials exited, talking to the officials'} ,
+{y: 0, x:Date.UTC(2014,0,20,11,45,0), z: 1, id: 376, name: 'Fire department officials allow GAStech employees to re-enter the building.'} ,
+{y: 1, x:Date.UTC(2014,0,20,11,45,0), z: 1, id: 92, name: 'fire unit allow construction employees of GAStech king-enter.'} ,
+{y: 2, x:Date.UTC(2014,0,20,11,46,0), z: 1, id: 208, name: 'Captain:fire gave the all-free one, several civil employees entered'} ,
+{y: 0, x:Date.UTC(2014,0,20,11,57,0), z: 2, id: 697, name: 'no appearance of other GAStech executives, nor has CEO appeared to speak to the press.'} ,
+{y: 4, x:Date.UTC(2014,0,20,11,58,0), z: 1, id: 292, name: 'spokesman: fire alarm was a false alarm and not a planned fire drill.'} ,
+{y: 3, x:Date.UTC(2014,0,20,12,20,0), z: 1, id: 163, name: 'The Abila police have been called to respond to GAStech headquarters for an unspecified emergency.(overheard)'} ,
+{y: 1, x:Date.UTC(2014,0,20,12,20,0), z: 1, id: 355, name: 'the police of Abila has arrived centers of GAStech.'} ,
+{y: 0, x:Date.UTC(2014,0,20,12,25,0), z: 1, id: 528, name: 'GAStech executives has not arrived at the Government reception after morning meeting.'} ,
+{y: 0, x:Date.UTC(2014,0,20,12,32,0), z: 1, id: 616, name: 'speculation: GAStech executives and the Kronos officials have fled the country with money.'} ,
+{y: 4, x:Date.UTC(2014,0,20,12,35,0), z: 1, id: 830, name: 'Some suggest that the recent executive group to jump the government reception in order to avoid the press.'} ,
+{y: 1, x:Date.UTC(2014,0,20,12,40,0), z: 1, id: 411, name: 'Additional police arrived, setting up barricades around the building.'} ,
+{y: 2, x:Date.UTC(2014,0,20,12,45,0), z: 1, id: 356, name: 'Abila Police cordoned off the GAStech headquarters.'} ,
+{y: 0, x:Date.UTC(2014,0,20,12,55,0), z: 1, id: 133, name: 'new information with nets not covered.'} ,
+{y: 2, x:Date.UTC(2014,0,20,13,30,0), z: 1, id: 450, name: 'administrative assistant to Orhan Strum was unavailable'} ,
+{y: 0, x:Date.UTC(2014,0,20,13,30,0), z: 1, id: 524, name: "GSAtech Chief Information Officer's phone was not answered."} ,
+{y: 0, x:Date.UTC(2014,0,20,13,30,0), z: 1, id: 685, name: "attache' to the main information of GSAtech not answer the call."} ,
+{y: 0, x:Date.UTC(2014,0,20,13,35,0), z: 1, id: 462, name: 'GAStech Chief Financial Officer is unavailable for comment.'} ,
+{y: 0, x:Date.UTC(2014,0,20,13,40,0), z: 1, id: 435, name: 'GAStech Environmental Safety Advisor Vasco-Pais is unavailable and disconnected the call.'} ,
+{y: 2, x:Date.UTC(2014,0,20,13,45,0), z: 1, id: 212, name: 'GAStech - Kronos not responding who and how many are missing.'} ,
+{y: 0, x:Date.UTC(2014,0,20,13,50,0), z: 1, id: 39, name: 'tried twenty more phone numbers at GAStech, but no one else has answered. '} ,
+{y: 1, x:Date.UTC(2014,0,20,13,56,0), z: 1, id: 522, name: 'GAStech-Tethys confirmed a number of GAStech employees are missing.'} ,
+{y: 2, x:Date.UTC(2014,0,20,14,0,0), z: 1, id: 44, name: 'A government automobile has been allowed with the perimeter of the police.'} ,
+
+{y: 3, x:Date.UTC(2014,0,20,15,6,0), z: 1, id: 21, name: 'police began to leave.'} ,
+
+{y: 0, x:Date.UTC(2014,0,20,15,20,0), z: 1, id: 321, name: 'GAStech employees allowed to leave the building.'} ,
+
+{y: 2, x:Date.UTC(2014,0,20,15,22,0), z: 1, id: 484, name: "When asked about GAStech executives fled the country, an employee said 'no comment'."} ,
+{y: 0, x:Date.UTC(2014,0,20,15,32,0), z: 1, id: 8, name: "Disowned dark people aren't GAStech,they are in the posterior part of the conference room this morning."} ,
+{y: 2, x:Date.UTC(2014,0,20,15,40,0), z: 1, id: 253, name: 'people in black was seen before the fire signaler.'} ,
+{y: 3, x:Date.UTC(2014,0,20,16,25,0), z: 1, id: 518, name: 'GAStech employees continue to trickle out of the building.'} ,
+{y: 1, x:Date.UTC(2014,0,20,17,10,0), z: 1, id: 368, name: 'news: people in black present that morning were the caterers.'} ,
+{y: 0, x:Date.UTC(2014,0,20,17,21,0), z: 1, id: 322, name: 'GAStech employees were instructed not to say anything.'} ,
+{y: 7, x:Date.UTC(2014,0,20,17,30,0), z: 1, id: 359, name: 'a kidnapping took place, but no information on who was involved.'} ,
+{y: 6, x:Date.UTC(2014,0,20,17,32,0), z: 1, id: 43, name: "It's a alarming of violence for the group of the activist."} ,
+
+{y: 2, x:Date.UTC(2014,0,20,18,37,0), z: 1, id: 87, name: 'caterers are suspicious as newfound wealth might provide a motive.'} ,
+{y: 4, x:Date.UTC(2014,0,20,19,0,0), z: 3, id: 400, name: 'Edvard Vann is accused and questioned as a POK terrorist because of name similarity. He denied a connection to the POK.'} ,
+{y: 1, x:Date.UTC(2014,0,20,19,30,0), z: 1, id: 585, name: 'A news conference is starting.'} ,
+{y: 2, x:Date.UTC(2014,0,20,19,37,0), z: 1, id: 567, name: 'no indication that the missing individuals have left the island of Kronos.'} ,
+{y: 1, x:Date.UTC(2014,0,20,19,37,0), z: 1, id: 817, name: 'suppliers was examined all. indication: the lacking individuals have left the island of Kronos.'} ,
+{y: 4, x:Date.UTC(2014,0,20,19,42,0), z: 1, id: 313, name: 'It was determined if all of 14 individuals are in fact missing.'} ,
+{y: 3, x:Date.UTC(2014,0,20,19,45,0), z: 1, id: 678, name: 'police cannot find the caterers.'} ,
+{y: 10, x:Date.UTC(2014,0,20,19,47,0), z: 5, id: 167, name: 'Reported 14 missing GASTech Employees,including 5 executive officers:GAStech CEO,CFO,CIO,COO,and Environmental Officer.'} ,
+{y: 0, x:Date.UTC(2014,0,20,20,0,0), z: 1, id: 582, name: 'President Kapelou has been moved to a secure location by his security team as a precaution.'} ,
+{y: 3, x:Date.UTC(2014,0,20,20,15,0), z: 1, id: 329, name: 'A government official says: investigators are working on this.'} ,
+{y: 4, x:Date.UTC(2014,0,20,20,21,0), z: 1, id: 169, name: 'first confirmation:events today are a kidnapping.'} ,
+{y: 1, x:Date.UTC(2014,0,20,22,0,0), z: 2, id: 637, name: 'Tethys law enforcement staff arrived in Kronos to assist investigation.'} ,
+
+{y: 7, x:Date.UTC(2014,0,20,23,0,0), z: 5, id: 326, name: "What we know: <br>14 GAStech employees missing and kidnapped. <br>Edvard Vann, a GAStech - Kronos security guard was interrogated and released.<br>POK was involved in today's events. <br>Unclear:who are the missing. <br>10:00, Abila Fire Department trucks responded to fire."} ,
+
+
+{y: 5, x:Date.UTC(2014,0,21,7,15,0), z: 2, id: 30, name: 'What we know: <br>A fire alarm sounded at GAStech-Kronos headquarters 10:15 yesterday. <br>Police announced 14 GAStech employees disappeared. <br>Officials from Tethys - likely GAStech corporate officials - arrived late last night to the Abila Police.  <br>no information about who is missing.'} ,
+
+
+{y: 1, x:Date.UTC(2014,0,21,8,50,0), z: 1, id: 30, name: 'GAStech are attending the news conference for 9:00.'} ,
+{y: 4, x:Date.UTC(2014,0,21,9,11,0), z: 3, id: 583, name: 'police revised the number of missing from 14 to 10.'} ,
+{y: 5, x:Date.UTC(2014,0,21,9,34,0), z: 1, id: 250, name: 'The names of the missing are known, not released.'} ,
+{y: 1, x:Date.UTC(2014,0,21,10,16,0), z: 1, id: 556, name: 'A GAStech spokesman announced: CEO was not among the missing and has returned to Tethys. He was in transit from the GAStech building to the capitol when the kidnapping took place.'} ,
+{y: 2, x:Date.UTC(2014,0,21,11,45,0), z: 1, id: 793, name: 'Homeland Illumination correspondent Petrus Gerhard has contacted a reporter to alert readers of an important announcement coming shortly.'} ,
+{y: 7, x:Date.UTC(2014,0,21,11,53,0), z: 2, id: 693, name: 'correspondent Petrus Gerhard from one disowned position, writing: POK asked to communicate with you without obstacle.'} ,
+{y: 4, x:Date.UTC(2014,0,21,12,0,0), z: 5, id: 400, name: 'POK made an anouncement to claim their position and incite citizens, and demanding a $20M ransom from GAStech CEO'} ,
+
+{x:Date.UTC(2014,0,21,13,0,0),y:0,z:1,name:''},
+
+]
+
+
+jetdata = [
+{y: 0, x:Date.UTC(2014,0,20,10,20,0), z: 1, id: 763, name: 'GAStech employees evacuate the building and a helicopter leaves from the roof.'} ,
+{y: 0, x:Date.UTC(2014,0,20,12,30,0), z: 3, id: 299, name: "A private jet left Abila with seven or eight businesses-type passengers, and seemed to be in a hurry. Destination unclear."},
+{y: 1, x:Date.UTC(2014,0,20,12,47,0), z: 2, id: 625, name: 'two police squad cars have arrived with lights and sirens.'} ,
+{y: 2, x:Date.UTC(2014,0,20,14,30,0), z:3, name: 'A classified jet left the airport of Abila with eight "bussiness type" people, seemed more relaxed than the first group and were celebrating something.'} ,
+{y: 1, x:Date.UTC(2014,0,20,15,12,0), z: 2, id: 426, name: 'Two police cars each with two policemen inside just left GAStech with no lights or sirens.'} ,
+{y: 2, x:Date.UTC(2014,0,20,15,20,0), z: 3, id: 699, name: 'The private plane left in 14:30 for Rome,Italy, limits to eight passengers, it has no connection with GAStech'} ,
+{y: 6, x:Date.UTC(2014,0,20,17,40,0), z: 1, id: 718, name: 'ABILA AIRPORT CONFIRMS TWO PRIVATE JETS LEFT TODAY.'} ,
+{y: 1, x:Date.UTC(2014,0,20,17,44,0), z: 1, id: 15, name: 'The identity of first mystery jet left today remains disowned.'} ,
+{y: 1, x:Date.UTC(2014,0,20,17,48,0), z: 2, id: 429, name: 'Two private jets left Abila Airport today with 14~16 passengers in all.The second private jet left for Rome, Italy. First one not confirmed.'} ,
+{y: 3, x:Date.UTC(2014,0,20,18,10,0), z: 3, id: 26, name: 'The GAStech executive jet(belong to CEO) arrived in Tethys a few hours ago,it refueled and went to Abila with 6 civil employees of GAStech'} ,
+{y: 2, x:Date.UTC(2014,0,20,18,30,0), z: 3, id: 31, name: 'The GAStech executive jet arrived at Kronos. The occupants(likely GAStech corporate officials) were taken by limousine to the Abila Police.'} ,
+]
+
+keyword_fire=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 5 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 3 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 5 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 1 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 1 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 3 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 2 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 2 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 2 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 4 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 2 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 1 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 3 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 2 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 2 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,42,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 2 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,6,30,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 3 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 0 },
+]
+
+keyword_missing=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 1 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 1 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 2 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 1 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 1 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 1 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,42,0) , y: 2 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 2 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 3 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,6,30,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 1 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 2 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 3 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 3 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 1 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 0 },
+]
+
+keyword_kidnapping=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 1 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 3 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 4 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 1 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,42,0) , y:0 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 1 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 1 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 3 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,6,30,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 1 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 1 },
+]
+
+keyword_pok=[
+{x: Date.UTC(2014,0,20,9,26,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,18,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,27,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,49,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,10,52,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,23,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,46,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,57,0) , y: 0 },
+{x: Date.UTC(2014,0,20,11,58,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,51,0) , y: 0 },
+{x: Date.UTC(2014,0,20,12,55,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,13,56,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,14,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,5,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,6,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,12,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,22,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,38,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,15,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,16,25,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,30,0) , y: 2 },
+{x: Date.UTC(2014,0,20,17,32,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,44,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,48,0) , y: 0 },
+{x: Date.UTC(2014,0,20,17,50,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,7,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,10,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,30,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,40,0) , y: 0 },
+{x: Date.UTC(2014,0,20,18,53,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,0,0) , y: 2 },
+{x: Date.UTC(2014,0,20,19,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,35,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,37,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,42,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,45,0) , y: 0 },
+{x: Date.UTC(2014,0,20,19,47,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,15,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,20,0) , y: 0 },
+{x: Date.UTC(2014,0,20,20,21,0) , y: 0 },
+{x: Date.UTC(2014,0,20,22,0,0) , y: 0 },
+{x: Date.UTC(2014,0,20,23,0,0) , y: 1 },
+{x: Date.UTC(2014,0,21,0,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,7,15,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,14,0) , y: 0 },
+{x: Date.UTC(2014,0,21,8,50,0) , y: 0 },
+{x: Date.UTC(2014,0,21,9,11,0) , y: 2 },
+{x: Date.UTC(2014,0,21,9,34,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,13,0) , y: 0 },
+{x: Date.UTC(2014,0,21,10,16,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,45,0) , y: 0 },
+{x: Date.UTC(2014,0,21,11,53,0) , y: 1 },
+{x: Date.UTC(2014,0,21,12,0,0) , y: 0 },
+{x: Date.UTC(2014,0,21,12,45,0) , y: 1 },
+]
+
+		</script>
+	</head>
+	<body>
+<script src="Highcharts/Highstock-2.0.1/js/highstock.js"></script>
+<script src="Highcharts/Highcharts-4.0.1/js/highcharts-more.js"></script>
+<script src="Highcharts/Highstock-2.0.1/js/modules/exporting.js"></script>
+
+<div id="container" style="height: 620px; min-width: 310px"></div>
+	</body>
+</html>

@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+ 
+.node {
+  font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+ 
+.link {
+  fill: none;
+}
+ 
+.active {
+  fill: none;
+}
+ 
+svg {
+  font: 10px sans-serif;
+}
+
+.background path {
+  fill: none;
+  stroke: #ccc;
+  stroke-opacity: .4;
+  shape-rendering: crispEdges;
+}
+
+.foreground path {
+  fill: none;
+  stroke-opacity: .5;
+}
+
+.brush .extent {
+  fill-opacity: .3;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+.axis line, .axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  text-shadow: 0 1px 0 #fff;
+  cursor: move;
+}
+
+      rect.bordered {
+        stroke: #E6E6E6;
+        stroke-width:2px;   
+      }
+
+      text.mono {
+        font-size: 9pt;
+        font-family: Consolas, courier;
+        fill: #aaa;
+      }
+
+      text.axis-workweek {
+        fill: #000;
+      }
+
+      text.axis-worktime {
+        fill: #000;
+      }
+
+</style>
+<link rel="stylesheet" type="text/css" href="d3.parcoords.css">
+<body>
+<script type="text/javascript" src="d3/d3.js"></script>
+<script src="d3.parcoords.js"></script>
+<script>
+    var selectedPeople = [],safePeople = [], selectedRelations = [], selectedTopic, overPeople, overrelation, heatMapActive, topicIndexes = [], emailTopicIndexes = [], mainClasses, nodes, topicsNow,dataofemployee2,topicsSuspect = [];
+    var names = [ "Mat Bramar", "Anda Ribera", "Rachel Pantanal", "Linda Lagos", "Ruscella Mies Haber", "Carla Forluniau", "Cornelia Lais", "Marin Onda", "Isande Borrasca", "Axel Calzas", "Kare Orilla", "Elsa Orilla", "Brand Tempestad", "Lars Azada", "Felix Balas", "Lidelse Dedos", "Birgitta Frente", "Adra Nubarron", "Gustav Cazar", "Vira Frente", "Willem Vasco-Pais", "Sten Sanjorge Jr.", "Ingrid Barranco", "Ada Campo-Corrente", "Orhan Strum", "Bertrand Ovan", "Emile Arpa", "Varro Awelon", "Dante Coginian", "Albina Hafon", "Benito Hawelon", "Claudio Hawelon", "Henk Mies", "Valeria Morlun", "Adan Morlun", "Cecilia Morluniau", "Irene Nant", "Dylan Scozzese", "Linnea Bergen", "Lucas Alcazar", "Isak Baza", "Nils Calixto", "Sven Flecha", "Kanon Herrero", "Varja Lagos", "Stenig Fusil", "Minke Mies", "Hennie Osvaldo", "Isia Vann", "Edvard Vann", "Felix Resumir", "Loreto Bodrogi", "Hideki Cocinaro", "Inga Ferro" ];
+    var emails = [ "Mat.Bramar@gastech.com.kronos", "Anda.Ribera@gastech.com.kronos", "Rachel.Pantanal@gastech.com.kronos", "Linda.Lagos@gastech.com.kronos", "Ruscella.Mies.Haber@gastech.com.kronos", "Carla.Forluniau@gastech.com.kronos", "Cornelia.Lais@gastech.com.kronos", "Marin.Onda@gastech.com.kronos", "Isande.Borrasca@gastech.com.kronos", "Axel.Calzas@gastech.com.kronos", "Kare.Orilla@gastech.com.kronos", "Elsa.Orilla@gastech.com.kronos", "Brand.Tempestad@gastech.com.kronos", "Lars.Azada@gastech.com.kronos", "Felix.Balas@gastech.com.kronos", "Lidelse.Dedos@gastech.com.kronos", "Birgitta.Frente@gastech.com.kronos", "Adra.Nubarron@gastech.com.kronos", "Gustav.Cazar@gastech.com.kronos", "Vira.Frente@gastech.com.kronos", "Willem.Vasco-Pais@gastech.com.kronos", "Sten.Sanjorge Jr.@gastech.com.kronos", "Ingrid.Barranco@gastech.com.kronos", "Ada.Campo-Corrente@gastech.com.kronos", "Orhan.Strum@gastech.com.kronos", "Bertrand.Ovan@gastech.com.kronos", "Emile.Arpa@gastech.com.kronos", "Varro.Awelon@gastech.com.kronos", "Dante.Coginian@gastech.com.kronos", "Albina.Hafon@gastech.com.kronos", "Benito.Hawelon@gastech.com.kronos", "Claudio.Hawelon@gastech.com.kronos", "Henk.Mies@gastech.com.kronos", "Valeria.Morlun@gastech.com.kronos", "Adan.Morlun@gastech.com.kronos", "Cecilia.Morluniau@gastech.com.kronos", "Irene.Nant@gastech.com.kronos", "Dylan.Scozzese@gastech.com.kronos", "Linnea.Bergen@gastech.com.kronos", "Lucas.Alcazar@gastech.com.kronos", "Isak.Baza@gastech.com.kronos", "Nils.Calixto@gastech.com.kronos", "Sven.Flecha@gastech.com.kronos", "Kanon.Herrero@gastech.com.kronos", "Varja.Lagos@gastech.com.kronos", "Stenig.Fusil@gastech.com.kronos", "Minke.Mies@gastech.com.kronos", "Hennie.Osvaldo@gastech.com.kronos", "Isia.Vann@gastech.com.kronos", "Edvard.Vann@gastech.com.kronos", "Felix.Resumir@gastech.com.kronos", "Loreto.Bodrogi@gastech.com.kronos", "Hideki.Cocinaro@gastech.com.kronos", "Inga.Ferro@gastech.com.kronos" ];
+    var empTypes = [ "Administration", "Administration", "Administration", "Administration", "Administration", "Administration", "Administration", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Engineering", "Executive", "Executive", "Executive", "Executive", "Executive", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Facilities", "Information Technology", "Information Technology", "Information Technology", "Information Technology", "Information Technology", "Security", "Security", "Security", "Security", "Security", "Security", "Security", "Security", "Security", "Security", "Security" ];
+    var empPositions = [ "Assistant to CEO", "Assistant to CFO", "Assistant to CIO", "Assistant to COO", "Assistant to Engineering Group Manager", "Assistant to IT Group Manager", "Assistant to Security Group Manager", "Drill Site Manager", "Drill Technician", "Drill Technician", "Drill Technician", "Drill Technician", "Drill Technician", "Engineer", "Engineer", "Engineering Group Manager", "Geologist", "Geologist", "Hydraulic Technician", "Hydraulic Technician", "Environmental Safety Advisor", "President/CEO", "SVP/CFO", "SVP/CIO", "SVP/COO", "Facilities Group Manager", "Janitor", "Janitor", "Lead Janitor", "Truck Driver", "Truck Driver", "Truck Driver", "Truck Driver", "Truck Driver", "Truck Driver", "Truck Driver", "Truck Driver", "Truck Driver", "IT Group Manager", "IT Helpdesk", "IT Technician", "IT Technician", "IT Technician", "Badging Office", "Badging Office", "Building Control", "Perimeter Control", "Perimeter Control", "Perimeter Control", "Perimeter Control", "Security Group Manager", "Site Control", "Site Control", "Site Control" ];
+    var froms = ["Mat Bramar","Anda Ribera","Rachel Pantanal","Linda Lagos","Ruscella Mies Haber","Carla Forluniau","Cornelia Lais","Marin Onda","Isande Borrasca","Axel Calzas","Kare Orilla","Elsa Orilla","Brand Tempestad","Lars Azada","Felix Balas","Lidelse Dedos","Birgitta Frente","Adra Nubarron","Gustav Cazar","Vira Frente","Willem Vasco-Pais","Sten Sanjorge Jr.","Ingrid Barranco","Ada Campo-Corrente","Orhan Strum","Bertrand Ovan","Emile Arpa","Varro Awelon","Dante Coginian","Albina Hafon","Benito Hawelon","Claudio Hawelon","Henk Mies","Valeria Morlun","Adan Morlun","Cecilia Morluniau","Irene Nant","Dylan Scozzese","Linnea Bergen","Lucas Alcazar","Isak Baza","Nils Calixto","Sven Flecha","Kanon Herrero","Varja Lagos","Stenig Fusil","Minke Mies","Hennie Osvaldo","Isia Vann","Edvard Vann","Felix Resumir","Loreto Bodrogi","Hideki Cocinaro","Inga Ferro"],
+tos = ["Mat Bramar","Anda Ribera","Rachel Pantanal","Linda Lagos","Ruscella Mies Haber","Carla Forluniau","Cornelia Lais","Marin Onda","Isande Borrasca","Axel Calzas","Kare Orilla","Elsa Orilla","Brand Tempestad","Lars Azada","Felix Balas","Lidelse Dedos","Birgitta Frente","Adra Nubarron","Gustav Cazar","Vira Frente","Willem Vasco-Pais","Sten Sanjorge Jr.","Ingrid Barranco","Ada Campo-Corrente","Orhan Strum","Bertrand Ovan","Emile Arpa","Varro Awelon","Dante Coginian","Albina Hafon","Benito Hawelon","Claudio Hawelon","Henk Mies","Valeria Morlun","Adan Morlun","Cecilia Morluniau","Irene Nant","Dylan Scozzese","Linnea Bergen","Lucas Alcazar","Isak Baza","Nils Calixto","Sven Flecha","Kanon Herrero","Varja Lagos","Stenig Fusil","Minke Mies","Hennie Osvaldo","Isia Vann","Edvard Vann","Felix Resumir","Loreto Bodrogi","Hideki Cocinaro","Inga Ferro"];
+    var bgdata = [], topics = {},sorted = [];
+
+    for (i = 0; i < names.length; ++i) {
+        var all = empTypes[i]+"|"+empPositions[i]+"|"+emails[i];
+        bgdata[i] = {name:names[i],depart:empTypes[i],job:empPositions[i],all:all};
+    }
+    var defaultInfo = "",defaultFrom = "";
+    var mainh = 2000,
+        mainw = 2000;
+        diameter = 1100,
+        radius = diameter / 2,
+        innerRadius = radius - 250;
+
+    var cluster = d3.layout.cluster()
+        .size([360, innerRadius])
+        .sort(null)
+        .value(function (d) { return d.size; });
+
+    var bundle = d3.layout.bundle();
+
+    var line = d3.svg.line.radial()
+        .interpolate("bundle")
+        .tension(.44)
+        .radius(function (d) { return d.y; })
+        .angle(function (d) { return d.x / 180 * Math.PI; });
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", mainw)
+        .attr("height", mainh)
+      .append("g")
+        .attr("transform", "translate(" + (radius + 600) + "," + (radius-130) + ")");
+
+    var info = svg.append("text")
+        .attr("dy","1.35em")
+        .text("info").attr("font-size", 15);
+    var fromtext = svg.append("text")
+        .attr("dy", "3.3em").text("from").attr("font-size", 12);
+    var datetext = svg.append("text")
+        .text(lineDate).attr("font-size",30).attr("stroke","#888888")
+        .attr("dy", "-1.35em").attr("dx","-1.5em");
+    var timetext = svg.append("text")
+        .text(lineTime).attr("font-size", 30).attr("stroke", "#888888")
+        .attr("dy", "0em").attr("dx","-0.5em");
+
+    var lineDate = "1/6/2014", lineTime = "8:39";
+    var savedLineDate = lineDate, savedLineTime = lineTime;
+
+    drawEmployeesParallel(svg);
+    d3.csv("email headers.csv", function (classes) {
+        mainClasses = classes;
+
+        var tempTopics = [];
+
+        classes.forEach(function(d){
+            var topic,flag = false;
+            if (d.Subject.indexOf("RE: ") == 0) {
+                topic = d.Subject.substring(4);
+            }
+            else {
+                topic = d.Subject;
+                if (tempTopics[topic]) {
+                    tempTopics[topic].count += 1;
+                } else {
+                    tempTopics[topic] = {count:1};
+                }
+                flag = true;
+            }
+            topic += "[" + tempTopics[topic].count + "]";
+            if(topics[topic]){
+                topics[topic][topics[topic].length] = d;
+            }else{
+                topics[topic] = [d];
+            }
+        });
+
+        for (var topic in topics) {
+            //topics[topic].noemails
+            topics[topic].sort(function (x, y) {
+                var format = d3.time.format("%m/%d/%Y %H:%M");
+                
+                if (format.parse(x.Date) < format.parse(y.Date)) {
+                    return -1;
+                } else if (format.parse(x.Date) > format.parse(y.Date)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+        }
+
+        nodes = cluster.nodes(packageHierarchy(classes, bgdata));
+        
+
+        svg.selectAll(".node")
+            .data(nodes.filter(function (n) { return !n.children; }))
+          .enter().append("g")
+            .attr("class", "node")
+          .append("text")
+            .attr("dx", function (d) { return d.x < 180 ? 0 : 0; })
+            .attr("dy", 10)
+            .attr("text-anchor", function (d) { return d.x < 180 ? "start" : "end"; })
+            .attr("transform", function (d) { return d.x < 180 ? null : "rotate(180)"; })
+        .attr("font-size", 15)
+            .attr("opacity", 1)
+            .attr("y", -5)
+            .text(function (d) {
+                return d.key.substring(0, d.key.lastIndexOf("@"));
+            });
+
+        svg.selectAll(".node")
+        .append("rect").attr("y", "-0.85em")
+            .attr("fill", function (d) {
+                var r, g, b;
+                switch (d.parent.parent.key) {
+                    case "Administration": r = 163; g = 73; b = 164; break;
+                    case "Engineering": r = 181; g = 230; b = 29; break;
+                    case "Executive": r = 255; g = 242; b = 0; break;
+                    case "Facilities": r = 255; g = 201; b = 14; break;
+                    case "Information Technology": r = 153; g = 217; b = 234; break;
+                    case "Security": r = 112; g = 146; b = 190; break;
+                    default: r = 0; g = 0; b = 0; break;
+                }
+                res = "#";
+                if (r < 16) res += 0;
+                res += r.toString(16);
+                if (g < 16) res += 0;
+                res += g.toString(16);
+                if (b < 16) res += 0;
+                res += b.toString(16);
+                return res;
+            })
+            .attr("height", 18)
+            .attr("width", 100)
+        .attr("opacity", 0.3)
+        .attr("stroke","gray");
+
+        svg.selectAll(".node")
+        .append("rect").attr("y", "-0.85em")
+            .attr("fill", "red")
+            .attr("height", 18)
+            .attr("width", 100)
+        .attr("opacity", 0)
+        .attr("stroke", "gray")
+        .attr("class", function (d) {
+            var name = "";
+            for (var i = 0; i < d.name.length; ++i) {
+                if (d.name.substring(i, i + 1) != "." && d.name.substring(i, i + 1) != " ")
+                    name += d.name.substring(i, i + 1);
+            }
+            return "nodeactive" + name;
+        })
+        .on("mouseover", function (d) {
+            var name = "";
+            for (var i = 0; i < d.name.length; ++i) {
+                if (d.name.substring(i, i + 1) != "." && d.name.substring(i, i + 1) != " ")
+                    name += d.name.substring(i, i + 1);
+            }
+            document.getElementById("parallelforeground" + name).style.stroke = "red";
+            document.getElementById("parallelforeground" + name).style.strokeWidth = 3;
+            d3.select(".nodeactive" + name).attr("opacity", 0.5);
+        })
+        .on("mouseout", function (d) {
+            var name = "";
+            for (var i = 0; i < d.name.length; ++i) {
+                if (d.name.substring(i, i + 1) != "." && d.name.substring(i, i + 1) != " ")
+                    name += d.name.substring(i, i + 1);
+            }
+            document.getElementById("parallelforeground" + name).style.stroke = "steelblue";
+            document.getElementById("parallelforeground" + name).style.strokeWidth = 1;
+            if(selectedPeople.indexOf(d.name) >= 0)
+                d3.select(".nodeactive" + name).attr("opacity", 0.3);
+            else
+                d3.select(".nodeactive" + name).attr("opacity", 0);
+
+        })
+        .on("click", function (d) {
+            var name = "";
+            for (var i = 0; i < d.name.length; ++i) {
+                if (d.name.substring(i, i + 1) != "." && d.name.substring(i, i + 1) != " ")
+                    name += d.name.substring(i, i + 1);
+            }
+            changeSelectedPeople(d.name);
+            //drawTopicAxis(topics);
+            drawTopicsRing(radius/2-50);
+            heatMapActive.style("opacity", 0);
+            selectedPeople.forEach(function (d2) {
+                var from = sortedFroms.indexOf(d2), tos = sortedTos.indexOf(d2);
+                for (var i = 0; i < 54; ++i) {
+                    document.getElementById(getHeatMapId(from, i)).style.opacity = 0.2;
+                    document.getElementById(getHeatMapId(i, to)).style.opacity = 0.2;
+                }
+            });
+            document.getElementById("parallelforeground" + name).style.stroke = "red";
+            document.getElementById("parallelforeground" + name).style.strokeWidth = 3;
+        })
+        .append("title").text(function (d) {
+            return d.parent.key;
+        });
+
+        svg.selectAll(".node")
+            .attr("transform", function (d) {
+                return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")";
+            });
+
+        //drawTopicAxis(topics);
+        calcTopics();
+        drawDayRing(classes, radius / 2-25,nodes);
+        drawTimeRing(radius / 2 - 25, classes, nodes);
+        drawLines(classes, nodes);
+        drawRelations(classes, svg);
+
+
+        // Highlight the node and connected links on mouseover.
+        function nodeMouseover(d) {
+            svg.selectAll(".link").classed("active", function (p) { return p.source === d || p.target === d; });
+            //svg.selectAll(".node").classed
+            d3.select(this).classed("active", true);
+            info.text(d.node.name);
+        }
+
+        // Clear any highlighted nodes or links.
+        function mouseout() {
+            //svg.selectAll(".active").classed("active", false);
+            info.text(defaultInfo);
+        }
+    });
+
+    d3.select(self.frameElement).style("height", diameter + "px");
+
+    // Lazily construct the package hierarchy from class names.
+    function packageHierarchy(csvdata,bgdata) {
+        var map = {};
+
+        function find(name, data, num) {
+            var node = map[name], i;
+            if (!node) {
+                node = map[name] = data || { name: name, children: [] };
+                if (name.length) {
+                    node.parent = find(name.substring(0, i = name.lastIndexOf("|")));
+                    node.parent.children.push(node);
+                    node.key = name.substring(i + 1);
+                }
+            }
+            return node;
+        }
+
+        bgdata.forEach(function (d) {
+            find(d.all, d);
+        });
+
+        return map[""];
+    }
+
+    // Return a list of imports for the given array of nodes.
+    function packageImports(nodes) {
+        var map = {},
+            tos = [];
+
+        // Compute a map from name to node.
+        nodes.forEach(function (d) {
+            if (d.key)
+                map[d.key] = d;
+        });
+
+        // For each import, construct a link from the source to target node.
+        topicsNow.forEach(function (d) {
+            if (timeRight("1/" + d.startTime.day + "/2014 " + d.startTime.hour +((d.startTime.minute>9)?":":":0")+ d.startTime.minute)) {
+                d.lines.forEach(function (d2) {
+                    tos.push({ source: map[d2.from], target: map[d2.to], size: d2.size, time: "1/" + d.startTime.day + "/2014 " + d.startTime.hour + ":" + d.startTime.minute, title: d.Title });
+                });
+            }
+
+        });
+
+        return tos;
+    }
+
+    function getTimeArr(data) {
+        var temp = data;
+        var map = [];
+        data.forEach(function (d) {
+            var flag = false;
+            for (var key in map) {
+                if (key == d.Date)
+                { flag = true; break; }
+            }
+            if (!flag) {
+                map.push({time:d.Date,count:d.To.split(",").length});
+            }
+        });
+        map.sort();
+        return map;
+    }
+
+    function isSafeTopic(topic) {
+        var res = false;
+        topic.topicPeople.forEach(function (p) {
+            if (safePeople.indexOf(p.replace(new RegExp(/( )/g), '')) >= 0)
+                res = true;
+        });
+        return res;
+    }
+
+    function drawTimeRing(r2, classes, nodes) {
+        var dataset = [];
+        var timeArrNow = [];
+        topicsSuspect = []; var tempCount = 0;
+        topicsNow.forEach(function (d) {
+            if (("1/" + d.startTime.day + "/2014").indexOf(lineDate.substring(0, lineDate.lastIndexOf("/"))) >= 0 && isSafeTopic(d))++tempCount;
+            if (("1/" + d.startTime.day + "/2014").indexOf(lineDate.substring(0, lineDate.lastIndexOf("/"))) >= 0 && !isSafeTopic(d)) {
+                topicsSuspect[topicsSuspect.length] = d;
+                dataset.push(1);
+                timeArrNow[timeArrNow.length] = { time: d.startTime.hour + ":" + ((d.startTime.minute > 9) ? d.startTime.minute : "0" + d.startTime.minute), date: "1/" + d.startTime.day + "/2014", count: d.noEmail };
+            }
+        });
+        var pie = d3.layout.pie(dataset);
+
+        var innerRadius = r2;
+        var arc = d3.svg.arc()
+        .outerRadius(function (d, i) {
+            if (i || i == 0)
+                return r2;
+        })
+        .innerRadius(function (d, i) {
+            if (i || i == 0)
+                //return r2 - 54;
+                return 0;
+        });
+        svg.selectAll("g.arcbg").remove();
+        svg.selectAll("g.arc").remove();
+        svg.selectAll("g.arcsActive").remove();
+        var arcs = svg.selectAll("g.arcbg")
+        .data(pie(dataset))
+        .enter()
+        .append("g")
+        .attr("class", "arcbg")
+        .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+        arcs.append("path")
+        .attr("fill", function (d, i) {
+            if (i % 2 == 0)
+                return "#cccccc";
+            else
+                return "#eeeeee";
+        })
+            //.attr("opacity", function (d, i) { if (i >= 0) return 0.3 - timeArr[i].count / 100; })
+            .attr("opacity",0.1)
+        .attr("d", arc);
+
+        arc = d3.svg.arc()
+.outerRadius(function (d, i) {
+    if (i || i == 0)
+        return r2;
+})
+.innerRadius(function (d, i) {
+    if (i || i == 0)
+        return r2 - 30 - timeArrNow[i].count/4;
+});
+
+        arcs = svg.selectAll("g.arc")
+        .data(pie(dataset))
+        .enter()
+        .append("g")
+        .attr("class", "arc")
+        .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+        arcs.append("path")
+        .attr("fill", function (d, i) {
+            var res = "#";
+            if (i % 2 == 0) res += (153).toString(16) + (217).toString(16) + (234).toString(16);
+            else res += "00" + (162).toString(16) + (232).toString(16);
+            return res;
+        })
+            .attr("opacity", function (d, i) {
+                if (i >= 0)
+                    //return (1 - timeArrNow[i].count / 10) / 2;
+                    return 0.3;
+            })
+        .attr("d", arc);
+
+        arcsactive = svg.append("g")
+            .attr("class", "arcsActive")
+            .selectAll(".arcsActive")
+        .data(pie(dataset))
+        .enter()
+        .append("g")
+        .attr("class", function (d, i) {
+            var temp;
+            classes.forEach(function (d3) {
+                if (d3.Date == timeArrNow[i].date + " " + timeArrNow[i].time) {
+                    temp = d3;
+                }
+            });
+            return "arcTimeActive" + emailTopicIndexes[temp.Subject + temp.Date];
+        })
+        .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+        arcsactive.append("path")
+        .attr("fill", "red")
+            .attr("opacity", function (d, i) {
+                return 0;
+
+            })
+        .attr("d", arc)
+        .on("mouseover", function (d, i) {
+            lineTime = timeArrNow[i].time.substring(timeArrNow[i].time.lastIndexOf(" ") + 1);
+            datetext.text(lineDate);
+            timetext.text(lineTime);
+            var res, from;
+            classes.forEach(function (d3) {
+                if (d3.Date == lineDate + " " + lineTime) {
+                    res = d3.Subject;
+                    from = "From:" + d3.From;
+                }
+            }
+            );
+
+            info.text(function (d2) {
+                if (res)
+                    return res;
+                else
+                    return "nothing found";
+            });
+            info.attr("dx", function (d) {
+                return "-" + (info.text().length * 0.23).toString() + "em";
+            });
+            fromtext.text(function (d2) {
+                if (from)
+                    return from;
+                else
+                    return "no from found";
+            });
+            fromtext.attr("dx", function (d) {
+                return "-" + (fromtext.text().length * 0.2).toString() + "em";
+            });
+            drawLines(classes, nodes);
+        })
+        .on("mouseout", function (d, i) {
+            lineTime = savedLineTime;
+            datetext.text(lineDate);
+            timetext.text(lineTime);
+            info.text(defaultInfo);
+            info.attr("dx", function (d) {
+                return "-" + (info.text().length * 0.23).toString() + "em";
+            });
+            fromtext.attr("dx", function (d) {
+                return "-" + (fromtext.text().length * 0.2).toString() + "em";
+            });
+            drawLines(classes, nodes);
+        })
+        .on("click", function (d, i) {
+            savedLineTime = timeArrNow[i].time.substring(timeArrNow[i].time.lastIndexOf(" ") + 1);
+            lineTime = savedLineTime;
+            datetext.text(lineDate);
+            timetext.text(lineTime);
+            var res, from;
+            classes.forEach(function (d3) {
+                if (d3.Date == lineDate + " " + lineTime) {
+                    res = d3.Subject;
+                    from = "From:" + d3.From;
+                }
+            }
+            );
+
+            info.text(function (d2) {
+                if (res)
+                    return res;
+                else
+                    return "nothing found";
+            });
+            info.attr("dx", function (d) {
+                return "-" + (info.text().length * 0.23).toString() + "em";
+            });
+            fromtext.text(function (d2) {
+                if (from)
+                    return from;
+                else
+                    return "no from found";
+            });
+            fromtext.attr("dx", function (d) {
+                return "-" + (fromtext.text().length * 0.2).toString() + "em";
+            });
+            defaultInfo = res;
+            defaultFrom = from;
+            drawLines(classes, nodes);
+        });
+
+        drawTopicsRing(radius/2-50);
+    }
+
+    function drawTopicsRing(r) {
+        if (d3.selectAll(".topicAxisTopics"))
+            d3.selectAll(".topicAxisTopics").remove();
+        calcTopics();
+        var diffx1 = 1150,diffy1 = 420,count = 0;
+        var svg2 = d3.select("svg").append("g").attr("class", "topicAxisTopics");
+        var topicsTheDay=[];
+        //topicsNow.forEach(function(d){
+        topicsSuspect.forEach(function (d) {
+            if("1/"+d.startTime.day+"/2014" == lineDate)
+            topicsTheDay[topicsTheDay.length] = d;
+        });
+        svg2.selectAll(".topicAxis")
+            .data(topicsTheDay)
+          .enter().append("g")
+            .attr("class", "topicAxisTopics")
+          .append("circle")
+        .attr("r", function (d) {
+            return d.noEmailTimes*2;
+        })
+        .attr("cx", function (d,i) {
+            //return x(new Date(2014, 1 - 1, d.startTime.day, d.startTime.hour, d.startTime.minute)) + diffx;
+            return diffx1 + Math.sin(2 * 3.14159 / topicsTheDay.length * (i + 0.5)) * r * ((1 - d.danger)*0.8 +0.2);
+        })
+        .attr("cy", function (d,i) {
+            //return y(d.danger) + diffy;
+            return diffy1 - Math.cos(2 * 3.14159 / topicsTheDay.length * (i + 0.5)) * r * ((1 - d.danger) * 0.8 + 0.2);
+        })
+        .attr("stroke", function (d) {
+            return "#e7969c";
+        })
+            .attr("fill", function (d) {
+                return "#d6616b";
+            })
+            .attr("stroke-opacity", 0.4)
+        .attr("fill-opacity", 0.3);
+
+        svg2.selectAll(".topicAxisTopics").append("title").text(function (d) {
+            var temp = "";
+            d.topicPeople.forEach(function (d2) {
+                temp += "\n" + d2;
+            });
+            return d.topicName +"\n1/"+ d.startTime.day+"/2014 "+d.startTime.hour+((d.startTime.minute > 9)?":":":0")+d.startTime.minute + temp;
+        });
+
+        svg2.selectAll(".topicAxis")
+    .data(topicsTheDay)
+  .enter().append("g")
+    .attr("class", "topicAxisTopics")
+  .append("circle")
+.attr("r", function (d) {
+    var value = 0,sum = 0;
+    d.topicPeople.forEach(function (d2) {
+        sum += 1;
+        if (d2 == "Isia Vann") {
+            value += 1;
+        } else {
+            dataofemployee2.forEach(function (d3,i) {
+                if (d3.name == d2) {
+                    if (["Awelon", "Bodrogi", "Mies", "Osvaldo", "Vann"].indexOf(d3.FamiliName) >= 0)
+                        value += 0.25;
+                    if (d3.BirthCountry == "Kronos")
+                        value += 0.25;
+                    if (["Facilities", "Security"].indexOf(d3.CurrentEmploymentType) >= 0)
+                        value += 0.25;
+                    if(d3.StartWorkYear.toString() >= 2008)
+                        value += 0.25;
+                }
+            });
+        }
+    });
+    if (sum == 0)
+        return 0;
+    return d.noEmailTimes * 2 * value / sum;
+})
+.attr("cx", function (d, i) {
+    //return x(new Date(2014, 1 - 1, d.startTime.day, d.startTime.hour, d.startTime.minute)) + diffx;
+    return diffx1 + Math.sin(2 * 3.14159 / topicsTheDay.length * (i + 0.5)) * r * ((1 - d.danger) * 0.8 + 0.2);
+})
+.attr("cy", function (d, i) {
+    //return y(d.danger) + diffy;
+    return diffy1 - Math.cos(2 * 3.14159 / topicsTheDay.length * (i + 0.5)) * r * ((1 - d.danger) * 0.8 + 0.2);
+})
+.attr("stroke", function (d) {
+    return "#e7969c";
+})
+    .attr("fill", function (d) {
+        return "#fff300";
+    })
+    .attr("stroke-opacity", 0)
+.attr("fill-opacity", 0.3);
+
+        svg2.selectAll(".topicAxisTopics").append("title").text(function (d) {
+            var temp = "";
+            d.topicPeople.forEach(function (d2) {
+                temp += "\n" + d2;
+            });
+            return d.topicName + "\n1/" + d.startTime.day + "/2014 " + d.startTime.hour + ((d.startTime.minute > 9) ? ":" : ":0") + d.startTime.minute + temp;
+        });
+
+        svg2.selectAll(".topicAxisTopics")
+          .append("circle")
+        .attr("r", function (d) {
+            return d.noEmailTimes * (d.noPeople / 54)*2;
+        })
+        .attr("cx", function (d,i) {
+            //return x(new Date(2014, 1 - 1, d.startTime.day, d.startTime.hour, d.startTime.minute)) + diffx;
+            return diffx1 + Math.sin(2 * 3.14159 / topicsTheDay.length * (i + 0.5)) * r * ((1 - d.danger) * 0.8 + 0.2);
+        })
+        .attr("cy", function (d,i) {
+            //return y(d.danger) + diffy;
+            return diffy1 - Math.cos(2 * 3.14159 / topicsTheDay.length * (i + 0.5)) * r * ((1 - d.danger) * 0.8 + 0.2);
+        })
+        .attr("stroke", function (d) {
+            return "#e7969c";
+        })
+            .attr("fill", function (d) {
+                return "grey";
+            })
+            .attr("stroke-opacity", 0)
+        .attr("fill-opacity", 0.3);
+
+
+        svg2.selectAll(".topicAxisTopics")
+            .on("mouseover", function (d) {
+
+                lineTime = d.startTime.hour + ((d.startTime.minute > 9) ? ":" : ":0") + d.startTime.minute;
+                datetext.text(lineDate);
+                timetext.text(lineTime);
+                var res, from;
+                res = d.topicName;
+                from = "From:" + d.topicPeople[0] + "@gastech.com.kronos";
+
+                info.text(function (d2) {
+                    if (res)
+                        return res;
+                    else
+                        return "nothing found";
+                });
+                info.attr("dx", function (d) {
+                    return "-" + (info.text().length * 0.23).toString() + "em";
+                });
+                fromtext.text(function (d2) {
+                    if (from)
+                        return from;
+                    else
+                        return "no from found";
+                });
+                fromtext.attr("dx", function (d) {
+                    return "-" + (fromtext.text().length * 0.2).toString() + "em";
+                });
+                drawLines(mainClasses, nodes);
+
+                d.topicPeople.forEach(function (d2) {
+                    document.getElementById("parallelforeground" + d2.replace(" ", "").replace(".", "")).style.stroke = "red";
+                    document.getElementById("parallelforeground" + d2.replace(" ", "").replace(".", "")).style.strokeWidth = 3;
+                });
+            })
+            .on("mouseout", function (d) {
+                d.topicPeople.forEach(function (d2) {
+
+                    lineTime = savedLineTime;
+                    datetext.text(lineDate);
+                    timetext.text(lineTime);
+                    info.text(defaultInfo);
+                    info.attr("dx", function (d) {
+                        return "-" + (info.text().length * 0.23).toString() + "em";
+                    });
+                    fromtext.attr("dx", function (d) {
+                        return "-" + (fromtext.text().length * 0.2).toString() + "em";
+                    });
+                    drawLines(mainClasses, nodes);
+
+                    document.getElementById("parallelforeground" + d2.replace(" ", "").replace(".", "")).style.stroke = "steelblue";
+                    document.getElementById("parallelforeground" + d2.replace(" ", "").replace(".", "")).style.strokeWidth = 1;
+                });
+            })
+        .on("click", function (d) {
+            selectedTopic = { name: d.topicName, date: "1/" + d.startTime.day + "/2014 " + d.startTime.hour + ":" + d.startTime.minute };
+            drawTimeRing(radius / 2 - 25, mainClasses, nodes);
+        });
+
+    }
+
+    function drawDayRing(data, r2,nodes) {
+        var dayArr = [];
+        data.forEach(function (d,i) {
+                    var flag = false;
+                    for (var i = 0; i < dayArr.length;++i) {
+                        var temp = d.Date.substring(0,d.Date.lastIndexOf("/"));
+                        if (dayArr[i] == d.Date.substring(0,d.Date.lastIndexOf("/")))
+                        { flag = true; break; }
+                    }
+                    if (!flag) {
+                        dayArr.push(d.Date.substring(0, d.Date.lastIndexOf("/")));
+                    }
+        });
+        var dataset = [];
+        dayArr.forEach(function (d) {
+                dataset.push(1);
+        });
+        var pie = d3.layout.pie(dataset);
+
+        var innerRadius = r2;
+        var arc = d3.svg.arc()
+        .outerRadius(innerRadius)
+        .innerRadius(innerRadius+50);
+        var color = d3.scale.category20b();
+        var arcs = svg.selectAll("g.dayarc")
+        .data(pie(dataset))
+        .enter()
+        .append("g")
+        .attr("class", "dayarc")
+        .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+        arcs.append("path")
+        .attr("fill", function (d, i) {
+            //return color(i);
+            var res = "#";
+            if (i % 2 == 0) res += (163).toString(16) + (73).toString(16) + (164).toString(16);
+            else res += (200).toString(16) + (191).toString(16) + (231).toString(16);
+            return res;
+        })
+            .attr("opacity", 0.3)
+        .attr("d", arc)
+        .on("mouseover", function (d, i) {
+            lineDate = dayArr[i] + "/2014";
+            datetext.text(lineDate);
+            timetext.text(lineTime);
+            drawTimeRing(radius / 2 - 25, data, nodes);
+        })
+        .on("mouseout", function (d, i) {
+            lineDate = savedLineDate;
+            datetext.text(lineDate);
+            timetext.text(lineTime);
+            drawTimeRing(radius / 2 - 25, data, nodes);
+        })
+        .on("click", function (d, i) {
+            lineDate = dayArr[i] + "/2014";
+            savedLineDate = lineDate;
+            datetext.text(lineDate);
+            timetext.text(lineTime);
+            drawTimeRing(radius / 2 - 25, data, nodes);
+        });
+
+        arcs.append("text")
+        .attr("transform", function (d) {
+            return "translate(" + arc.centroid(d) + ")";
+        })
+        .attr("text-anchor", "middle")
+        .text(function (d, i) {
+            if(i >= 0 && i < dayArr.length)
+            return dayArr[i];
+        });
+    }
+
+    function drawLines(classes,nodes) {
+        var links = packageImports(nodes, classes);
+        var bundlelinks = bundle(links);
+        svg.selectAll(".link").remove();
+        svg.selectAll(".active").remove();
+        svg.selectAll(".link")
+            .data(bundle(links))
+          .enter().append("path")
+            .attr("class", "link")
+            .attr("d", line)
+            .attr("stroke", "#666666")
+            .attr("stroke-width", 2)
+        .attr("stroke-opacity",0);
+
+        var active = bundle(links);
+        svg.selectAll(".active")
+            .data(bundle(links))
+          .enter().append("path")
+            .attr("class", "active")
+            .attr("d", line)
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", function (d,i) {
+                return links[i].size;
+            })
+            .attr("stroke-opacity",0)
+	    .attr("stroke-opacity", 0.5)
+        //.on("mouseover", function (d) {
+            //highlight effect
+        //})
+        //.on("mouseout", function (d) { })
+        .on("click", function (d) {
+            drawTopic(d[0].key,d[d.length-1].key,lineDate,lineTime);
+        });
+
+        // Highlight the link and connected nodes on mouseover.
+        function linkMouseover(d) {
+            svg.selectAll(".link").classed("active", function (p) { return p === d; });
+            svg.selectAll(".node circle").classed("active", function (p) { return p === d.source || p === d.target; });
+            info.text(d.source.From + " ¡ú " + d.target.From);
+        }
+
+        // Clear any highlighted nodes or links.
+        function mouseout() {
+            //svg.selectAll(".active").classed("active", false);
+            info.text(defaultInfo);
+        }
+    }
+
+    function timeRight(time) {
+        if (time == lineDate + " " + lineTime)
+            return true;
+        return false;
+    }
+
+    function drawEmployeesParallel(mainsvg) {
+
+        var domainFamilyName = [], domainBirthCountry = [], domainCurrentEmploymentType = [];
+
+        var m = [30, 10, 10, 10],
+            w = 900 - m[1] - m[3],
+            h = 200 - m[0] - m[2];
+
+        var x = d3.scale.ordinal().rangePoints([0, w], 1),
+            y = {},
+            dragging = {};
+
+        var line = d3.svg.line(),
+            axis = d3.svg.axis().orient("left"),
+            background,
+            foreground;
+        var svg = d3.select("svg").append("g").attr("class", "parallel")
+        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+        d3.csv("parallel/dataofemployee2.csv", function (cars) {
+            dataofemployee2 = cars;
+            domainFamilyName = ["Awelon", "Bodrogi","Mies", "Osvaldo", "Vann", "other"];
+            domainBirthCountry = ["Kronos", "Tethys", "Asteria"];
+            domainCurrentEmploymentType = ["Facilities", "Security", "Administration", "Engineering", "Executive", "Information Technology"];
+
+            // Extract the list of dimensions and create a scale for each.
+            x.domain(dimensions = d3.keys(cars[0]).filter(function (d) {
+                if (d == "Age") {
+                    return d != "name" && (y[d] = d3.scale.linear()
+                        .domain(d3.extent(cars, function (p) { return +p[d]; }))
+                        .range([0, h]));
+                } else if (d == "StartWorkYear") {
+                    return d != "name" && (y[d] = d3.scale.linear()
+                        .domain(d3.extent(cars, function (p) { return +p[d]; }))
+                        .range([h, 0]));
+                }
+                else if (d == "FamilyName") {
+                    return d != "name" && (y[d] = d3.scale.ordinal()
+                        //.domain(d3.extent(cars, function (p) { return +p[d]; }))
+                        .domain(domainFamilyName)
+                        .range([0, 1, 2, 3, 4, 5]).rangePoints([0, h], 0));
+                } else if (d == "BirthCountry") {
+                    return d != "name" && (y[d] = d3.scale.ordinal()
+                        //.domain(d3.extent(cars, function (p) { return +p[d]; }))
+                        .domain(domainBirthCountry)
+                        .range([0, 1, 2]).rangePoints([0, h], 0));
+                }
+                else if (d == "CurrentEmploymentType") {
+                    return d != "name" && (y[d] = d3.scale.ordinal()
+                        //.domain(d3.extent(cars, function (p) { return +p[d]; }))
+                        .domain(domainCurrentEmploymentType)
+                        .range([0, 1, 2, 3, 4, 5]).rangePoints([0, h], 0));
+                }
+            }));
+
+            // Add grey background lines for context.
+            background = svg.append("svg:g")
+                .attr("class", "background")
+              .selectAll("path")
+                .data(cars)
+              .enter().append("svg:path")
+                .attr("d", path);
+
+            // Add blue foreground lines for focus.
+            foreground = svg.append("svg:g")
+                .attr("class", "foreground")
+              .selectAll("path")
+                .data(cars)
+              .enter().append("svg:path")
+                .attr("d", path)
+                .attr("class","parallelforeground")
+            .attr("id", function (d) {
+                var name = "";
+                for (var j = 0; j < d.name.length; ++j) {
+                    if (d.name.substring(j, j + 1) != "." && d.name.substring(j, j + 1) != " ")
+                        name += d.name.substring(j, j + 1);
+                }
+                return "parallelforeground"+name;
+            })
+            .attr("stroke","steelblue");
+
+            // Add a group element for each dimension.
+            var g = svg.selectAll(".dimension")
+                .data(dimensions)
+              .enter().append("svg:g")
+                .attr("class", "dimension")
+                .attr("transform", function (d) { return "translate(" + x(d) + ")"; })
+                .call(d3.behavior.drag()
+                  .on("dragstart", function (d) {
+                      selectedPeople.forEach(function (d2) {
+                          d3.select(".nodeactive" + d2.replace(".", "").replace(" ", "").replace(" ", "")).attr("opacity", 0);
+                      });
+                      selectedPeople = [];
+                      dragging[d] = this.__origin__ = x(d);
+                      background.attr("visibility", "hidden");
+                  })
+                  .on("drag", function (d) {
+                      dragging[d] = Math.min(w, Math.max(0, this.__origin__ += d3.event.dx));
+                      foreground.attr("d", path);
+                      dimensions.sort(function (a, b) { return position(a) - position(b); });
+                      x.domain(dimensions);
+                      g.attr("transform", function (d) { return "translate(" + position(d) + ")"; })
+                  })
+                  .on("dragend", function (d) {
+                      delete this.__origin__;
+                      delete dragging[d];
+                      transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+                      transition(foreground)
+                          .attr("d", path);
+                      background
+                          .attr("d", path)
+                          .transition()
+                          .delay(500)
+                          .duration(0)
+                          .attr("visibility", null);
+                      //drawTopicAxis(topics);
+                      drawTopicsRing(radius / 2-50);
+                  }));
+
+            // Add an axis and title.
+            g.append("svg:g")
+                .attr("class", "axis")
+                .each(function (d) { d3.select(this).call(axis.scale(y[d])); })
+              .append("svg:text")
+                .attr("text-anchor", "middle")
+                .attr("y", -9)
+                .text(String);
+
+            // Add and store a brush for each axis.
+            g.append("svg:g")
+                .attr("class", "brush")
+                .each(function (d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); })
+              .selectAll("rect")
+                .attr("x", -8)
+                .attr("width", 16);
+        });
+
+        function position(d) {
+            var v = dragging[d];
+            return v == null ? x(d) : v;
+        }
+
+        function transition(g) {
+            return g.transition().duration(500);
+        }
+
+        // Returns the path for a given data point.
+        function path(d) {
+            return line(dimensions.map(function (p) { return [position(p), y[p](d[p])]; }));
+        }
+
+        // Handles a brush event, toggling the display of foreground lines.
+        function brush() {
+            var actives = dimensions.filter(function (p) { return !y[p].brush.empty(); }),
+                extents = actives.map(function (p) { return y[p].brush.extent(); });
+            foreground.style("display", function (d) {
+                return actives.every(function (p, i) {
+                    var value;
+                    if (p == "FamilyName") {
+                        value = 160 / (domainFamilyName.length - 1) * domainFamilyName.indexOf(d[p]);
+                    }
+                    else if (p == "BirthCountry") {
+                        value = 160 / (domainBirthCountry.length - 1) * domainBirthCountry.indexOf(d[p]);
+                    }
+                    else if (p == "CurrentEmploymentType") {
+                        value = 160 / (domainCurrentEmploymentType.length - 1) * domainCurrentEmploymentType.indexOf(d[p]);
+                    } else {
+                        value = d[p];
+                    }
+                    var name = "";
+                    for (var j = 0; j < d.name.length; ++j) {
+                        if (d.name.substring(j, j + 1) != "." && d.name.substring(j, j + 1) != " ")
+                            name += d.name.substring(j, j + 1);
+                    }
+                    if (extents[i][0] <= value && value <= extents[i][1]) {
+                        mainsvg.select(".nodeactive" + name).attr("opacity", 0.3);
+                        addSelectedPeople(d.name);
+                    }
+                    else {
+                        mainsvg.select(".nodeactive" + name).attr("opacity", 0);
+                        removeSelectedPeople(d.name);
+                    }
+
+                    return extents[i][0] <= value && value <= extents[i][1];
+                }) ? null : "none";
+            });
+        }
+
+    }
+
+    function calcTopics() {
+        var limitnoemails = 50, limitnopeople = 20, limitdanger = 10, limitlasttime = 10;
+        var topicnames = [], noemails = [], nopeople = [], danger = [], lasttime = [], topicpeople = [], starttime = [], noemailtimes = [], lines = [];
+        var i = 0;
+        for (d in topics) {//d is a topic
+            var time1, time2, flag = true, firstEmail;
+            d = topics[d];
+            var temp = 0, names = [];
+            noemailtimes[i] = 0;
+            lines[i] = [];
+            d.forEach(function (d2) {//d2 is an email
+                if (flag) {
+                    time1 = d2.Date; flag = false;
+                    topicnames[i] = d2.Subject;
+                    firstEmail = d2;
+                    if (topicIndexes.indexOf(d2.Subject + d2.Date) == -1) {
+                        topicIndexes[topicIndexes.length] = d2.Subject + d2.Date;
+                    }
+                }
+                if (!emailTopicIndexes[d2.Subject + d2.Date]) {
+                    emailTopicIndexes[d2.Subject + d2.Date] = topicIndexes.indexOf(firstEmail.Subject + firstEmail.Date);
+                }
+                time2 = d2.Date;
+                temp += d2.To.split(", ").length;
+                d2.To.split(", ").forEach(function (d3) {//d3 is a To
+                    var name = getNameFromEmail(d3);
+                    if (names.indexOf(name) < 0)
+                        names[names.length] = getNameFromEmail(d3);
+                    var flag2 = -1;
+                    lines[i].forEach(function (d4, j) {//d4
+                        if ((d4.from == d2.From && d4.to == d3)
+                            || (d4.from == d3 && d4.to == d2.From))
+                            flag2 = j;
+                    });
+                    if (flag2 != -1) {
+                        lines[i][flag2].size += 1;
+                    } else {
+                        lines[i][lines[i].length] = { from: d2.From, to: d3, size: 1 };
+                    }
+                });
+                if (names.indexOf(getNameFromEmail(d2.From)) < 0)
+                    names[names.length] = getNameFromEmail(d2.From);
+                ++noemailtimes[i];
+            });
+            noemails[i] = temp;
+            nopeople[i] = names.length;
+            topicpeople[i] = names;
+            var day = 0, hour = 0, minute = 0;
+            var timestart = parseDate(time1), timeend = parseDate(time2);
+            var day = timeend.day - timestart.day;
+            hour = timeend.hour - timestart.hour;
+            minute = timeend.minute - timestart.minute;
+            lasttime[i] = day + hour / 24 + minute / 24 / 60;
+            flag = true;
+            starttime[i] = timestart;
+            ++i;
+        }
+        danger = calcDanger(topics);
+
+        topicsNow = [];
+        for (var i = 0; i < topicnames.length; ++i) {
+            topicsNow[i] = { topicName: topicnames[i], noEmail: noemails[i], noPeople: nopeople[i], topicPeople: topicpeople[i], lastTime: lasttime[i], danger: danger[i], startTime: starttime[i], noEmailTimes: noemailtimes[i], index: i, lines: lines[i] };
+        }
+    }
+
+    function drawTopicAxis(topics) {
+        if (d3.selectAll(".topicAxisTopics")) d3.selectAll(".topicAxisTopics").remove();
+        if (d3.selectAll(".topicAxis")) d3.selectAll(".topicAxis").remove();
+        var taw = 700, tah = 200,diffx = 100,diffy = 200;
+        var limitnoemails = 50, limitnopeople = 20, limitdanger = 10, limitlasttime = 10;
+        var topicnames = [], noemails = [], nopeople = [], danger = [], lasttime = [],topicpeople = [],starttime = [],noemailtimes=[],lines = [];
+        var x = d3.time.scale().range([0, taw]),
+            y = d3.scale.linear().range([tah, 0]),
+    parse = d3.time.format("%Y/%m/%d %H:%M").parse,
+    format = d3.time.format("%Y-%m-%d %H:%M"),
+            x_dom = [],
+            x_dom_zoom = [],
+            colorScale = d3.scale.category20b();
+        var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+            yAxis = d3.svg.axis().scale(y).orient("left");
+        var i = 0;
+        for (d in topics) {//d is a topic
+            var time1, time2,flag = true,firstEmail;
+            d = topics[d];
+            var temp = 0, names = [];
+            noemailtimes[i] = 0;
+            lines[i] = [];
+            d.forEach(function (d2) {//d2 is an email
+                if (flag) {
+                    time1 = d2.Date; flag = false;
+                    topicnames[i] = d2.Subject;
+                    firstEmail = d2;
+                    if (topicIndexes.indexOf(d2.Subject+d2.Date) == -1) {
+                        topicIndexes[topicIndexes.length] = d2.Subject + d2.Date;
+                    }
+                }
+                if (!emailTopicIndexes[d2.Subject + d2.Date]) {
+                    emailTopicIndexes[d2.Subject + d2.Date] = topicIndexes.indexOf(firstEmail.Subject+firstEmail.Date);
+                }
+                time2 = d2.Date;
+                temp += d2.To.split(", ").length;
+                d2.To.split(", ").forEach(function (d3) {//d3 is a To
+                    var name = getNameFromEmail(d3);
+                    if (names.indexOf(name) < 0)
+                        names[names.length] = getNameFromEmail(d3);
+                    var flag2 = -1;
+                    lines[i].forEach(function (d4,j) {//d4
+                        if((d4.from == d2.From && d4.to == d3) 
+                            || (d4.from == d3 && d4.to == d2.From))
+                            flag2 = j;
+                    });
+                    if(flag2 != -1){
+                        lines[i][flag2].size += 1;
+                    }else{
+                        lines[i][lines[i].length] = {from:d2.From,to:d3,size:1};
+                    }
+                });
+                if (names.indexOf(getNameFromEmail(d2.From)) < 0)
+                    names[names.length] = getNameFromEmail(d2.From);
+                ++noemailtimes[i];
+            });
+            noemails[i] = temp;
+            nopeople[i] = names.length;
+            topicpeople[i] = names;
+            var day = 0, hour = 0, minute = 0;
+            var timestart = parseDate(time1), timeend = parseDate(time2);
+            var day = timeend.day - timestart.day;
+            hour = timeend.hour - timestart.hour;
+            minute = timeend.minute - timestart.minute;
+            lasttime[i] = day + hour / 24 + minute / 24 / 60;
+            flag = true;
+            starttime[i] = timestart;
+            ++i;
+        }
+        danger = calcDanger(topics);
+
+        topicsNow = [];
+        for(var i = 0;i < topicnames.length;++i){
+            topicsNow[i] = { topicName: topicnames[i], noEmail: noemails[i], noPeople: nopeople[i], topicPeople: topicpeople[i], lastTime: lasttime[i], danger: danger[i], startTime: starttime[i], noEmailTimes: noemailtimes[i],index:i,lines:lines[i] };
+        }
+        var svg = d3.select("svg").append("g")
+        .attr("class", "topicAxis");
+
+        x_dom = [new Date(2014, 1 - 1, 6, 0), new Date(2014, 1 - 1, 18, 0)];
+        d3.select("#footer .times").text(x_dom.map(format).join(" to "));
+
+        x_dom_zoom = [new Date(2014, 1 - 1, 6, 8,0), new Date(2014, 1 - 1, 6, 21,0)]; //just a small part of domain
+        y_dom = [0, 1];
+
+
+        x.domain(x_dom);
+        y.domain(y_dom);
+        
+        svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(" + diffx + "," + (tah + diffy) + ")")
+    .call(xAxis.tickSubdivide(0).tickSize(6));
+
+        svg.append("g")
+            .attr("class", "y axis")
+    .attr("transform", "translate(" + diffx + "," +diffy + ")")
+            .call(yAxis.tickSubdivide(0).tickSize(6));
+        
+        svg.selectAll(".topicAxis")
+            .data(topicsNow)
+          .enter().append("g")
+            .attr("class", "topicAxisTopics")
+          .append("circle")
+        .attr("r", function (d) {
+            return d.noEmailTimes;
+        })
+        .attr("cx", function (d) {
+            return x(new Date(2014, 1 - 1, d.startTime.day, d.startTime.hour, d.startTime.minute)) + diffx;
+        })
+        .attr("cy", function (d) {
+            return y(d.danger) + diffy;
+        })
+        .attr("stroke", function (d) {
+            return "#e7969c";
+        })
+            .attr("fill", function (d) {
+                return "#d6616b";
+            })
+            .attr("stroke-opacity",0.3)
+        .attr("fill-opacity", 0.1);
+
+        svg.selectAll(".topicAxisTopics").append("title").text(function (d) {
+            var temp = "";
+            d.topicPeople.forEach(function (d2) {
+                temp += "\n" + d2;
+            });
+            return d.topicName+temp;
+        });
+        svg.selectAll(".topicAxisTopics")
+        .on("click", function (d) {
+            selectedTopic = { name: d.topicName, date: "1/" + d.startTime.day + "/2014 " + d.startTime.hour + ":" + d.startTime.minute };
+            drawTimeRing(radius / 2 - 25, mainClasses, nodes);
+        });
+
+        svg.selectAll(".topicAxisTopics")
+          .append("circle")
+        .attr("r", function (d) {
+            return d.noEmailTimes * (d.noPeople/54);
+        })
+        .attr("cx", function (d) {
+            return x(new Date(2014, 1 - 1, d.startTime.day, d.startTime.hour, d.startTime.minute)) + diffx;
+        })
+        .attr("cy", function (d) {
+            return y(d.danger) + diffy;
+        })
+        .attr("stroke", function (d) {
+            return "#e7969c";
+        })
+            .attr("fill", function (d) {
+                return "grey";
+            })
+            .attr("stroke-opacity", 0)
+        .attr("fill-opacity", 0.3);
+
+        
+    }
+
+    function calcDanger(topics) {
+        var danger = [];
+        var mark = 0, count = 0,i = 0;
+        for (d in topics) {
+            mark = 0;
+            count = 0;
+            d = topics[d];
+            d.forEach(function (d2) {
+                var tos = d2.To.split(", ");
+                tos.forEach(function (d3, j) {
+                    if (selectedPeople.indexOf(getNameFromEmail(d3)) >= 0)
+                        mark += 1;
+                    count += 1;
+                });
+            });
+            danger[i] = mark / count;
+            if (danger[i] != 0)
+                var j;
+            ++i;
+        }
+        return danger;
+    }
+
+    function resortRelationsEmployees() {
+        var tempSuspected = [], tempSafe = [], tempOther = [];
+        froms.forEach(function (d) {
+            var d1 = d.replace(d.replace(new RegExp(/( )/g), '')).replace(d.replace(new RegExp(/(.)/g), ''));
+            if (selectedPeople.indexOf(d) >= 0)
+                tempSuspected[tempSuspected.length] = d;
+            else if (safePeople.indexOf(d1) >= 0)
+                tempSafe[tempSafe.length] = d;
+            else
+                tempOther[tempOther.length] = d;
+        });
+        var res = [];
+        tempSuspected.forEach(function (d) {
+            res[res.length] = d;
+        });
+        tempOther.forEach(function (d) {
+            res[res.length] = d;
+        });
+        tempSafe.forEach(function (d) {
+            res[res.length] = d;
+        });
+        return res;
+    }
+
+    function drawRelations(classes,mainsvg) {
+        var margin = { top: 50, right: 0, bottom: 100, left: 30 },
+          width = 600 - margin.left - margin.right,
+          height = 600 - margin.top - margin.bottom,
+          gridSize = Math.floor(width / 54),
+          legendElementWidth = gridSize * 2,
+          buckets = 20,
+          diffx = 150,
+          diffy = 150,
+          colors = ["#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58"], 
+          data = [];
+
+        d3.selectAll(".heatmap").remove();
+        var sortedFroms = resortRelationsEmployees(),sortedTos = sortedFroms;
+
+        for (var i = 0; i < froms.length; ++i) {
+            for (var j = 0; j < tos.length; ++j) {
+                data[i*54+j] = { from: i, to: j, value:0 };
+            }
+        }
+
+        classes.forEach(function (d) {
+            var from = getNameFromEmail(d.From), to, length = d.To.split(", ").length;
+            d.To.split(", ").forEach(function (d2) {
+                to = getNameFromEmail(d2);
+                data[sortedFroms.indexOf(from) * 54 + sortedTos.indexOf(to)].value += 1 / length;
+                //data[froms.indexOf(from)*54+tos.indexOf(to)].value += 1/length;
+            });
+        });
+
+              var colorScale = d3.scale.quantile()
+                  .domain([1, buckets - 1, d3.max(data, function (d) { return d.value; })])
+                  .range(colors);
+
+              var svg = d3.select("svg").append("g").attr("class","heatmap")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+              var buttonG = svg.append("g").attr("id", "heatMapResortButton")
+              .attr("transform","translate(80,720)");
+              var button = buttonG.append("rect")
+                  .attr("id", "heatMapResortButton")
+                  .attr("width", 45)
+                  .attr("height", 15)
+                  .style("fill", "#ffffdf")
+                  .style("stroke", "#15295f")
+                  .on("click", function () { drawRelations(classes, mainsvg); });
+              var buttonText = buttonG.append("text")
+        .text("RESORT")
+                  .attr("transform", "translate(7,11)")
+                  .style("fill","#15295f")
+                  .on("click", function () { drawRelations(classes, mainsvg); });
+
+              var dayLabels = svg.selectAll(".dayLabel")
+                  //.data(froms)
+                  .data(sortedFroms)
+                  .enter().append("text")
+                    .text(function (d) { return d; })
+                    .attr("x", diffx)
+                    .attr("y", function (d, i) { return i * gridSize+diffy; })
+                    .style("text-anchor", "end")
+                    .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+                    .attr("class", function (d, i) { return "dayLabel mono axis axis-workweek"; })
+                    .attr("id", function (d) { return "heatmapy" + d; });
+
+              var timeLabels = svg.selectAll(".timeLabel")
+                  //.data(tos)
+                  .data(sortedTos)
+                  .enter().append("text")
+                    .text(function (d) { return d; })
+                    .attr("transform", function (d, i) { return "rotate(-90)translate("+ (-607-diffy+d.length * 2) +"," + (gridSize / 2 + i * gridSize + diffx +3) + ")" })
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .style("text-anchor", "middle")
+                    .attr("class", function (d, i) { return "timeLabel mono axis axis-worktime"; })
+                    .attr("id", function (d) { return "heatmapx" + d; });
+
+              var heatMapNameYActive = svg.selectAll(".heatMapNameYActive")
+            //.data(froms)
+            .data(sortedFroms)
+            .enter().append("rect")
+            .attr("height", 9)
+            .attr("width", 100)
+            .style("fill", "#008fff")
+            .style("opacity", function (d) {
+                if (safePeople.indexOf(d.replace(new RegExp(/( )/g), '')) == -1)
+                    return 0;
+                else
+                    return 0.3;
+            })
+            .attr("x", diffx-100)
+            .attr("y", function (d, i) { return i * gridSize + diffy - 9; })
+            //.style("text-anchor", "end")
+            .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+            .attr("class", function (d, i) { return ".heatMapNameYActive"; })
+            .attr("id", function (d) { return "heatmapyactive" + d.replace(new RegExp(/( )/g),""); })
+            .on("mouseover", function (d) {
+                document.getElementById("heatmapyactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.5;
+                document.getElementById("heatmapxactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.5;
+            })
+            .on("mouseout", function (d) {
+                if (safePeople.indexOf(d.replace(new RegExp(/( )/g), '')) != -1) {
+                    document.getElementById("heatmapyactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.3;
+                    document.getElementById("heatmapxactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.3;
+                }
+                else {
+                    document.getElementById("heatmapyactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0;
+                    document.getElementById("heatmapxactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0;
+                }
+            })
+            .on("click", function (d) {
+                if (safePeople.indexOf(d.replace(new RegExp(/( )/g), '')) == -1) {
+                    addSafePeople(d);
+                }
+                else
+                    removeSafePeople(d);
+            });
+
+              var heatMapNameXActive = svg.selectAll(".heatMapNameXActive")
+                  //.data(tos)
+                  .data(sortedTos)
+                  .enter().append("rect")
+                  .style("fill", "#008fff")
+                .attr("height", 9)
+                .attr("width", 100)
+                    .style("opacity", function (d) {
+                        if (safePeople.indexOf(d.replace(new RegExp(/( )/g), '')) == -1)
+                            return 0;
+                        else
+                            return 0.3;
+                    })
+                    .attr("transform", function (d, i) { return "rotate(-90)translate(" + (-607 - diffy) + "," + (gridSize / 2 + i * gridSize + diffx + 3) + ")" })
+                    .attr("x", -35)
+                    .attr("y", -8)
+                    //.style("text-anchor", "middle")
+                    .attr("class", function (d, i) { return ".heatMapNameYActive"; })
+                    .attr("id", function (d) { return "heatmapxactive" + d.replace(new RegExp(/( )/g),""); })
+                  .on("mouseover", function (d) {
+                      document.getElementById("heatmapyactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.5;
+                      document.getElementById("heatmapxactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.5;
+                  })
+            .on("mouseout", function (d) {
+                if (safePeople.indexOf(d.replace(new RegExp(/( )/g), '')) != -1) {
+                    document.getElementById("heatmapyactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.3;
+                    document.getElementById("heatmapxactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0.3;
+                }
+                else {
+                    document.getElementById("heatmapyactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0;
+                    document.getElementById("heatmapxactive" + d.replace(new RegExp(/( )/g), '')).style.opacity = 0;
+                }
+            })
+                    .on("click", function (d) {
+                        if (safePeople.indexOf(d.replace(new RegExp(/( )/g), '')) == -1) {
+                            addSafePeople(d);
+                        }
+                        else
+                            removeSafePeople(d);
+                    });
+
+              var heatMap = svg.selectAll(".hour")
+                  .data(data)
+                  .enter().append("rect")
+                  .attr("x", function (d) {
+                      return (d.from - 1) * gridSize + diffx + 10;
+                  })
+                  .attr("y", function (d) {
+                      return (d.to - 1) * gridSize + diffy + 10;
+                  })
+                  .attr("rx", 2)
+                  .attr("ry", 2)
+                  .attr("class", "hour bordered")
+                  .attr("width", gridSize)
+                  .attr("height", gridSize)
+        // .style("fill", "#ffffd9");
+                  .style("fill", "#ffffd9");
+
+              heatMap.transition().duration(1000)
+                  .style("fill", function (d) {
+                      //if (d.value != 0)
+                      //    return colorScale(d.value);
+                      //else
+                      //    return "#ffffd9";
+                      var r, g, b, value = Math.min(50, d.value);
+                      r = Math.round(255 - value / 20 * (255 - 8));
+                      g = Math.round(255 - value / 20 * (255 - 29));
+                      b = Math.round(217 - value / 20 * (217 - 88));
+                      var res = "#";
+                      if (r < 16) res += "0";
+                      res += r.toString(16);
+                      if (g < 16) res += "0";
+                      res += g.toString(16);
+                      if (b < 16) res += "0";
+                      res += b.toString(16);
+                      if (value == 0)
+                          res = "#ffffff";
+                      else if (value < 0.5)
+                          res = "#fffffe";
+                      return res;
+
+                  });
+
+              heatMapActive = svg.selectAll(".houractive")
+                        .data(data)
+                        .enter().append("rect")
+                        .attr("x", function (d) {
+                            return (d.from - 1) * gridSize + diffx + 10;
+                        })
+                        .attr("y", function (d) {
+                            return (d.to - 1) * gridSize + diffy + 10;
+                        })
+                  .attr("id", function (d) {
+                      return getHeatMapId(d.from, d.to);
+                  })
+                        .attr("rx", 2)
+                        .attr("ry", 2)
+                        .attr("class", "hour bordered")
+                        .attr("width", gridSize)
+                        .attr("height", gridSize)
+                        .style("fill", "#ff8888")
+                        .attr("opacity", 0)
+              .on("mouseover", function (d) {
+                  for (var j = 0; j < 54; ++j) {
+                      document.getElementById(getHeatMapId(j,d.to)).style.opacity = 0.1;
+                      document.getElementById(getHeatMapId(d.from,j)).style.opacity = 0.1;
+                  }
+                  document.getElementById("parallelforeground" + sortedFroms[d.from].replace(" ", "").replace(".", "")).style.stroke = "red";
+                  document.getElementById("parallelforeground" + sortedTos[d.from].replace(" ", "").replace(".", "")).style.strokeWidth = 3;
+                  document.getElementById("parallelforeground" + sortedFroms[d.to].replace(" ", "").replace(".", "")).style.stroke = "red";
+                  document.getElementById("parallelforeground" + sortedTos[d.to].replace(" ", "").replace(".", "")).style.strokeWidth = 3;
+              })
+        .on("mouseout", function (d) {
+            heatMapActive.style("opacity",0);
+            selectedPeople.forEach(function (d2) {
+                var from = sortedFroms.indexOf(d2), to = sortedTos.indexOf(d2);
+                for (var i = 0; i < 54; ++i) {
+                    document.getElementById(getHeatMapId(from,i)).style.opacity = 0.2;
+                    document.getElementById(getHeatMapId(i,to)).style.opacity = 0.2;
+                }
+            });
+            document.getElementById("parallelforeground" + sortedFroms[d.from].replace(" ", "")).style.stroke = "steelblue";
+            document.getElementById("parallelforeground" + sortedTos[d.from].replace(" ", "")).style.strokeWidth = 1;
+            document.getElementById("parallelforeground" + sortedFroms[d.to].replace(" ", "")).style.stroke = "steelblue";
+            document.getElementById("parallelforeground" + sortedTos[d.to].replace(" ", "")).style.strokeWidth = 1;
+        })
+        .on("click", function (d) {
+            var names = [sortedFroms[d.from], sortedTos[d.to]];
+            if (names[0] == names[1]) names = [sortedFroms[d.from]];
+            names.forEach(function (d2) {
+                changeSelectedPeople(d2);
+                //drawTopicAxis(topics);
+                drawTopicsRing(radius / 2 - 50);
+            });
+        });
+
+              heatMapActive.append("title").text(function (d) {
+                  return d.value + " " + sortedFroms[d.from] + " -> " + sortedTos[d.to];
+              });
+
+              var legend = svg.selectAll(".legend")
+                  .data([0].concat(colorScale.quantiles()), function (d) { return d; })
+                  .enter().append("g")
+                  .attr("class", "legend");
+
+    }
+
+    function getNameFromEmail(str) {
+        var res = "";
+        for (var i = 0; str.substring(i, i + 1) != "@" && i < str.length; ++i) {
+            if (str.substring(i, i + 1) == ".")
+                res += " ";
+            else
+                res += str.substring(i, i + 1);
+        }
+        if (res.substring(res.length - 1) == " ")
+            res = res.substring(0, res.length - 1) + ".";
+        return res;
+    }
+
+    function getHeatMapId(from,to) {
+        var res = "heatmapactive";
+        if (from < 10)
+            res += "0";
+        res += from;
+        if (to < 10)
+            res += "0";
+        res += to;
+        return res;
+    }
+
+    function changeSelectedPeople(name) {
+        if (selectedPeople.indexOf(name) >= 0) {
+            selectedPeople.splice(selectedPeople.indexOf(name), 1);
+            d3.select(".nodeactive"+name.replace(",","").replace(" ","")).attr("opacity",0);
+        } else {
+            selectedPeople[selectedPeople.length] = name;
+            d3.select(".nodeactive" + name.replace(",", "").replace(" ", "")).attr("opacity", 0.3);
+        }
+    }
+
+    function addSelectedPeople(name) {
+        if (selectedPeople.indexOf(name) < 0) {
+            removeSafePeople(name);
+            selectedPeople[selectedPeople.length] = name;
+            d3.select(".nodeactive" + name.replace(",", "").replace(" ", "")).attr("opacity", 0.3);
+        }
+    }
+
+    function removeSelectedPeople(name) {
+        if (selectedPeople.indexOf(name) >= 0) {
+            selectedPeople.splice(safePeople.indexOf(name), 1);
+            d3.select(".nodeactive" + name.replace(",", "").replace(" ", "")).attr("opacity", 0);
+        }
+    }
+
+    function changeSafePeople(name) {
+        var d = name.replace(new RegExp(/( )/g), '').replace(new RegExp(/(,)/g), '');
+        if (safePeople.indexOf(d) >= 0) {
+            removeSafePeople(name);
+        } else {
+            addSafePeople(name);
+        }
+    }
+
+    function addSafePeople(name) {
+        var d = name.replace(new RegExp(/( )/g), '').replace(new RegExp(/(,)/g), '');
+        if (safePeople.indexOf(d) < 0) {
+            removeSelectedPeople(name);
+            safePeople[safePeople.length] = d;
+            document.getElementById("heatmapxactive" + d).style.opacity = 0.3;
+            document.getElementById("heatmapyactive" + d).style.opacity = 0.3;
+        }
+    }
+
+    function removeSafePeople(name) {
+        var d = name.replace(new RegExp(/( )/g), '').replace(new RegExp(/(,)/g), '');
+        if (safePeople.indexOf(d) >= 0) {
+            safePeople.splice(safePeople.indexOf(d), 1);
+            document.getElementById("heatmapxactive" + d).style.opacity = 0;
+            document.getElementById("heatmapyactive" + d).style.opacity = 0;
+        }
+    }
+
+    function parseDate(str) {
+        var res = { year: 2014, month: 1, day: 0, hour: 0, minute: 0 };
+        res.day = parseInt(str.substring(str.indexOf("/")+1, str.lastIndexOf("/")));
+        res.hour = parseInt(str.substring(str.indexOf(" ")+1, str.indexOf(":")))
+        res.minute = parseInt(str.substring(str.indexOf(":")+1));
+        return res;
+    }
+
+</script>
+    </body>
